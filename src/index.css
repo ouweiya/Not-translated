@@ -1,0 +1,12 @@
+@font-face {
+  font-family: a;
+  src: url('./assets/aa.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+h1 {
+  font-family: a;
+  color: rgba(4, 161, 67, 0.89)
+}
+

@@ -14,6 +14,7 @@
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.7.0",
     "react": "^16.8.6",
+    "react-app-polyfill": "^1.0.1",
     "react-dom": "^16.8.6",
     "style-loader": "^0.23.1",
     "webpack": "^4.35.3",
@@ -22,11 +23,18 @@
   },
   "scripts": {
     "build": "webpack",
+    "build2": "webpack --mode=production",
     "watch": "webpack --watch",
     "start": "webpack-dev-server --open"
   },
   "devDependencies": {
-    "eslint": "^6.0.1",
-    "eslint-plugin-react": "^7.14.2"
+    "babel-eslint": "9.x",
+    "eslint": "5.x",
+    "eslint-config-react-app": "^4.0.1",
+    "eslint-plugin-flowtype": "2.x",
+    "eslint-plugin-import": "2.x",
+    "eslint-plugin-jsx-a11y": "6.x",
+    "eslint-plugin-react": "7.x",
+    "eslint-plugin-react-hooks": "1.5.0"
   }
 }

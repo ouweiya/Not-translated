@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import a from '../assets/18.png';
+import b from '../assets/14.png';
 
 const App = () => {
   const [count, setCount] = useState(0);
@@ -9,14 +10,21 @@ const App = () => {
     console.log(count);
   };
 
+  useEffect(() => {
+    // console.log('Init-2000');
+  }, []);
+
   return (
     <>
-      <h1>popup & option</h1>
       <Button variant='contained' color='primary' onClick={print}>
-        Hello World 2019
+        Hello World
       </Button>
       <br />
-      <img src={a} width='300' alt='ouwei' />
+      {location.hash === '#options' ? (
+        <img src={b} width='500' alt='ouwei' />
+      ) : (
+        <img src={a} width='300' alt='ouwei' />
+      )}
     </>
   );
 };

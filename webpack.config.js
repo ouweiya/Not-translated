@@ -62,11 +62,14 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebPackPlugin({ template: './src/index.html' }),
-    new CopyPlugin([
-      { from: __dirname + '/src/manifest.json', to: __dirname + '/dist' },
-      { from: __dirname + '/src/assets/icon.png', to: __dirname + '/dist/assets' },
-      { from: __dirname + '/src/background.js', to: __dirname + '/dist' }
-    ]),
+    new CopyPlugin(
+      [
+        { from: __dirname + '/src/manifest.json', to: __dirname + '/dist' },
+        { from: __dirname + '/src/assets', to: __dirname + '/dist/assets' },
+        { from: __dirname + '/src/background.js', to: __dirname + '/dist' }
+      ],
+      { copyUnmodified: true }
+    ),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css'

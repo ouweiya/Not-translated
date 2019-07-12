@@ -11,7 +11,7 @@
 ![good.png](http://github.com/ouweiya/Translation-fix/raw/master/good.png)
 ![bad.png](http://github.com/ouweiya/Translation-fix/raw/master/bad.png)
 
-
+![Screenshot](bad.png)
 # 使用
 
 # 安装

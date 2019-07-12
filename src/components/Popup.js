@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 8
   }
 }));
-console.log(window.chrome.csi());
+
 export default _ => {
   const classes = useStyles();
   const [once, setOnce] = useState(true);
@@ -19,12 +19,21 @@ export default _ => {
   const Selection = e => {
     chrome.tabs.getSelected(tab => {
       chrome.tabs.executeScript(tab.id, {
-        file: 'injectContent.js',
+        file: 'selector.js',
         runAt: 'document_start'
       });
     });
-    // setOnce(false);
-    // window.close();
+    setOnce(false);
+    window.close();
+  };
+
+  const clear = () => {
+    chrome.storage.sync.clear(console.log.bind(console, 'Clear'));
+  };
+  const stop = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, tab => {
+      chrome.tabs.sendMessage(tab[0].id, 'NOTRANSLATE');
+    });
   };
 
   return (
@@ -38,9 +47,17 @@ export default _ => {
       >
         翻译
       </Button>
-
-      <Button color='secondary' variant='contained' fullWidth>
+      <Button
+        color='secondary'
+        variant='contained'
+        fullWidth
+        className={classes.button}
+        onClick={stop}
+      >
         不翻译
+      </Button>
+      <Button color='secondary' variant='contained' fullWidth onClick={clear}>
+        清空
       </Button>
     </div>
   );

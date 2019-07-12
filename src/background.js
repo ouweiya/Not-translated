@@ -4,7 +4,13 @@ chrome.tabs.onUpdated.addListener((tabId, status, tab) => {
   // !reg.test(tab.url) && chrome.tabs.sendMessage(tabId, 'NOTRANSLATE');
 
   chrome.tabs.executeScript(tabId, {
-    file: 'injectionClassName.js',
+    file: 'translationfix.js',
     runAt: 'document_start'
   });
 });
+
+// chrome.commands.onCommand.addListener(command => {
+//   console.log('Command:', command);
+// });
+
+console.log('background');

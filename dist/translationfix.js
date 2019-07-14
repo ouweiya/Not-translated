@@ -8,7 +8,7 @@
 
   chrome.storage.sync.get([document.domain], d => {
     // console.log(d[document.domain]);
-    Notranslate(d[document.domain]);
+    // Notranslate(d[document.domain]);
   });
 
   // console.log('%cClassName', 'color:red;font-size:13px');

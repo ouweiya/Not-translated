@@ -20,9 +20,9 @@
     style.sheet.cssRules.length
   );
 
-  let current = null;
+  // let current = [];
   let classes = [];
-  let bool = false;
+
   const selec = el => {
     const tagName = el.tagName;
     const code = /^(pre|code|table|tbody)$/i.test(tagName);
@@ -42,37 +42,32 @@
     } else if (el.id) {
       classes = `#${el.id}`;
     } else {
-      bool = true;
-      // classes = [];
+      classes = [];
     }
-    return classes;
   };
 
   const mouseover = e => {
     e.stopPropagation();
     e.preventDefault();
 
-    classes = selec(e.target);
-
-    let c = bool ? 'bool' : classes;
-    // console.log('C:', c);
-    style.sheet.cssRules[0].selectorText = c;
-    // classes.length && (style.sheet.cssRules[1].selectorText = classes + ' *');
-    !bool && (current = e.target);
-    // (classes2 = classes)
-    // console.log(classes);
+    selec(e.target);
+    style.sheet.cssRules[0].selectorText = classes;
+    classes.length && (style.sheet.cssRules[1].selectorText = classes + ' *');
   };
 
   const mouseout = _ => {
     [...style.sheet.cssRules].forEach(cssRules => (cssRules.selectorText = '.a12345'));
   };
 
+  const filter = el => {
+    const code = /^(pre|code|table|tbody|td|th)$/i.test(el.tagName);
+    let bool = (el.className && !/^(textarea)$/i.test(el.tagName)) || code || el.id;
+    return !!bool;
+  };
+
   const iteration = (acc, i) => {
     acc.push(i);
-    if (i.children.length) {
-      return [...i.children].reduce(iteration, acc);
-    }
-    return acc;
+    return i.children.length ? [...i.children].reduce(iteration, acc) : acc.filter(i => filter(i));
   };
 
   const clearStyle = _ => {
@@ -84,15 +79,13 @@
     e.preventDefault();
     clearStyle();
 
-    let classes = [];
     if (e.wheelDelta > 0) {
-      classes = selec(nextEl(-1));
+      selec(nextEl(-1));
       style.sheet.cssRules[0].selectorText = classes;
     } else {
-      classes = selec(nextEl(1));
+      selec(nextEl(1));
       style.sheet.cssRules[0].selectorText = classes;
     }
-    console.log('classes', classes);
     console.log('classes-2', document.querySelector(classes));
     classes.length && (style.sheet.cssRules[1].selectorText = classes + ' *');
   };
@@ -103,8 +96,10 @@
     e.preventDefault();
     clearStyle();
     document.addEventListener('mousewheel', mousewheel, { passive: false });
-
-    const previous = e.path.slice(0, -2).reverse();
+    const previous = e.path
+      .slice(0, -2)
+      .reverse()
+      .filter(i => filter(i));
     const next = [...e.target.children].reduce(iteration, []);
     const path = previous.concat(next);
     const index = path.indexOf(e.target);
@@ -119,9 +114,9 @@
       };
     })(index);
   };
-
+  // console.log(current);
   const mouseup = e => {
-    if (current.contains(e.target) && current !== e.target) {
+    if (classes.length) {
       chrome.storage.sync.get(document.domain, d => {
         let classes1 = classes;
         d[document.domain] && (classes1 = [...new Set(d[document.domain].concat(classes))]);
@@ -129,10 +124,8 @@
       });
       // window.location.reload();
       console.log(`选取:`, classes);
-      // console.log(`current:`, current);
-      // console.log(`e.target:`, e.target);
     } else {
-      console.log(`%c不是同一个元素`, 'color:red');
+      console.log(`%c无效元素`, 'color:red');
     }
     stop();
   };
@@ -147,7 +140,6 @@
     document.removeEventListener('mouseup', mouseup);
     document.removeEventListener('mousewheel', mousewheel);
     document.removeEventListener('keydown', exit);
-    console.log('stop');
   };
 
   document.addEventListener('mouseover', mouseover);
@@ -166,9 +158,9 @@
     },
     { once: true }
   );
-  // document.addEventListener('click', mousedown);
 }
 
+// document.addEventListener('click', mousedown);
 // document.removeEventListener('click', mousedown);
 
 // document.addEventListener('mouseout', mouseout);

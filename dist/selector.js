@@ -20,27 +20,26 @@
     style.sheet.cssRules.length
   );
 
-  // let current = [];
   let classes = [];
 
   const selec = el => {
     const tagName = el.tagName;
-    const code = /^(pre|code|table|tbody)$/i.test(tagName);
+    const code = /^(pre|code|table|tbody|kbd|var|samp)$/i.test(tagName);
     const column = /^(td)$/i.test(tagName);
     const row = /^(th)$/i.test(tagName);
-    bool = false;
+
     if (el.className && !/^(textarea)$/i.test(tagName)) {
-      classes = [...el.classList].map(c => `.${c}`).join('');
+      classes = [].concat([...el.classList].map(c => `.${c}`).join(''));
     } else if (code) {
-      classes = tagName.toLowerCase();
+      classes = [].concat(tagName.toLowerCase());
     } else if (column) {
-      const i = el.cellIndex;
+      const i = [].concat(el.cellIndex);
       classes = `td:nth-of-type(${i + 1})`;
     } else if (row) {
-      const i = el.parentElement.rowIndex;
+      const i = [].concat(el.parentElement.rowIndex);
       classes = `tr:nth-of-type(${i + 1})`;
     } else if (el.id) {
-      classes = `#${el.id}`;
+      classes = [].concat(`#${el.id}`);
     } else {
       classes = [];
     }
@@ -53,6 +52,7 @@
     selec(e.target);
     style.sheet.cssRules[0].selectorText = classes;
     classes.length && (style.sheet.cssRules[1].selectorText = classes + ' *');
+    console.log('selectorText:', style.sheet.cssRules[0].selectorText);
   };
 
   const mouseout = _ => {
@@ -75,6 +75,7 @@
   };
 
   let nextEl = null;
+
   const mousewheel = e => {
     e.preventDefault();
     clearStyle();
@@ -86,7 +87,7 @@
       selec(nextEl(1));
       style.sheet.cssRules[0].selectorText = classes;
     }
-    console.log('classes-2', document.querySelector(classes));
+    console.log('classes', document.querySelector(classes.length ? classes : 'rerere'));
     classes.length && (style.sheet.cssRules[1].selectorText = classes + ' *');
   };
   // console.log(e.wheelDelta);
@@ -96,41 +97,84 @@
     e.preventDefault();
     clearStyle();
     document.addEventListener('mousewheel', mousewheel, { passive: false });
+    window.addEventListener('contextmenu', contextmenu, { once: true });
+
     const previous = e.path
       .slice(0, -2)
       .reverse()
       .filter(i => filter(i));
     const next = [...e.target.children].reduce(iteration, []);
     const path = previous.concat(next);
-    const index = path.indexOf(e.target);
 
-    nextEl = (i => {
-      let arr = path;
-      return n => {
-        i += n;
-        i < 0 && (i = 0);
-        i >= arr.length && (i = arr.length - 1);
-        return arr[i];
+    console.log('path', path);
+
+    if (path.length) {
+      const lookupIndex = el => {
+        if (!el.parentElement) {
+          return path.length - 1;
+        }
+        return path.indexOf(el) === -1 ? lookupIndex(el.parentElement) : path.indexOf(el);
       };
-    })(index);
+
+      const index = lookupIndex(e.target);
+      console.log('index', index);
+      nextEl = (i => {
+        let arr = path;
+        return n => {
+          i += n;
+          i < 0 && (i = 0);
+          i >= arr.length && (i = arr.length - 1);
+          return arr[i];
+        };
+      })(index);
+    }
   };
-  // console.log(current);
+
   const mouseup = e => {
     if (classes.length) {
-      chrome.storage.sync.get(document.domain, d => {
-        let classes1 = classes;
-        d[document.domain] && (classes1 = [...new Set(d[document.domain].concat(classes))]);
-        chrome.storage.sync.set({ [document.domain]: classes1 });
+      let domain = document.domain;
+      let domain2 = `_$${domain}`;
+      chrome.storage.sync.get([domain, `_$${domain}`], d => {
+        console.log('data:', d);
+        let [key1, key2] = Object.keys(d);
+        let [val1, val2] = Object.values(d);
+        console.log(key1, key2, '=====');
+        console.log(val1, val2, '-----');
+
+        if (e.button === 0) {
+          let classes1 = classes;
+          // console.log('0000:', key1, classes);
+          if (val1) {
+            classes1 = [...new Set(val1.concat(classes1))];
+            chrome.storage.sync.set({ [domain]: classes1 });
+          } else {
+            chrome.storage.sync.set({ [domain]: classes1 });
+          }
+        }
+
+        if (e.button === 2) {
+          let classes1 = classes;
+          // console.log('222', val2, classes);
+          if (val2) {
+            classes1 = [...new Set(val2.concat(classes1))];
+            chrome.storage.sync.set({ [domain2]: classes1 });
+          } else {
+            chrome.storage.sync.set({ [domain2]: classes1 });
+          }
+        }
       });
+
       // window.location.reload();
       console.log(`选取:`, classes);
     } else {
       console.log(`%c无效元素`, 'color:red');
     }
+
     stop();
   };
 
   const exit = e => e.keyCode === 27 && stop();
+  const contextmenu = e => e.preventDefault();
 
   const stop = () => {
     style.sheet && style.remove();
@@ -140,7 +184,10 @@
     document.removeEventListener('mouseup', mouseup);
     document.removeEventListener('mousewheel', mousewheel);
     document.removeEventListener('keydown', exit);
+    console.log('stop');
   };
+  // e.button === 0 &&
+  // window.removeEventListener('contextmenu', contextmenu);
 
   document.addEventListener('mouseover', mouseover);
   document.addEventListener('mouseout', mouseout);

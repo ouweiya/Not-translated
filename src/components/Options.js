@@ -24,7 +24,7 @@ export default _ => {
         <div key={i}>
           <h3>
             <span style={{ color: 'green', margin: '0 16px' }}>{i}</span>
-            <span style={{ background: '#87ff79', padding: '0 10px' }}>{Data[i]}</span>
+            <span style={{ background: '#87ff79', padding: '0 10px' }}>{Data[i].join()}</span>
           </h3>
         </div>
       );

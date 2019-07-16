@@ -4,8 +4,8 @@
   style.sheet.insertRule(
     `
     #a123456789_ {
-      background-color: #bcd5eb !important;
-      box-shadow: 0 0 0 2px #5166bb !important;
+      background-color: #82b4e680 !important;
+      box-shadow: 0 0 0 1px #0f4d9a !important;
     }
   `,
     style.sheet.cssRules.length
@@ -13,13 +13,40 @@
   style.sheet.insertRule(
     `
     #a123456_ {
-      background-color: #bcd5eb !important;
+      background-color: #82b4e680 !important;
       box-shadow: none !important;
     }
   `,
     style.sheet.cssRules.length
   );
 
+  style.sheet.insertRule(
+    `
+    #aa1ssd23456789_ {
+      background-color: #82b4e680 !important;
+      box-shadow: 0 0 0 1px #0f4d9a !important;
+    }
+  `,
+    style.sheet.cssRules.length
+  );
+  style.sheet.insertRule(
+    `
+    #aa123dsds6789_ {
+      background-color: #abe88f7d !important;
+    }
+  `,
+    style.sheet.cssRules.length
+  );
+  style.sheet.insertRule(
+    `
+    #aa1234ag56711_ {
+      box-shadow: 0 0 0 1px #44b311 !important;
+    }
+  `,
+    style.sheet.cssRules.length
+  );
+
+  // let cc = '.selected2.selected2.selected2.selected2.selected2.selected2';
   let classes = [];
 
   const selec = el => {
@@ -50,13 +77,16 @@
     e.preventDefault();
 
     selec(e.target);
-    style.sheet.cssRules[0].selectorText = classes;
+    const arr = classes.map(v => v.repeat(2));
+    style.sheet.cssRules[0].selectorText = arr;
     classes.length && (style.sheet.cssRules[1].selectorText = classes + ' *');
-    // console.log('selectorText:', style.sheet.cssRules[0].selectorText);
   };
+  // style.sheet.cssRules[0].selectorText = classes;
+  // console.log('selectorText:', style.sheet.cssRules[0].selectorText);
 
   const mouseout = _ => {
-    [...style.sheet.cssRules].forEach(cssRules => (cssRules.selectorText = '.a12345'));
+    // [...style.sheet.cssRules].forEach(cssRules => (cssRules.selectorText = '.a12345'));
+    [...style.sheet.cssRules].forEach((cssRules, i) => i < 2 && (cssRules.selectorText = '.a12345xx'));
   };
 
   const filter = el => {
@@ -92,21 +122,26 @@
   };
   // console.log(e.wheelDelta);
 
+  let next = [];
+  let previous = [];
+  let tap = true;
+
+
   const mousedown = e => {
     e.stopPropagation();
     e.preventDefault();
     clearStyle();
     document.addEventListener('mousewheel', mousewheel, { passive: false });
-    window.addEventListener('contextmenu', contextmenu, { once: true });
+    // window.addEventListener('contextmenu', contextmenu, { once: true });
+    window.addEventListener('contextmenu', contextmenu);
+    document.addEventListener('mouseup', mouseup);
 
-    const previous = e.path
+    previous = e.path
       .slice(0, -2)
       .reverse()
       .filter(i => filter(i));
-    const next = [...e.target.children].reduce(iteration, []);
+    next = [...e.target.children].reduce(iteration, []);
     const path = previous.concat(next);
-
-    // console.log('path', path);
 
     if (path.length) {
       const lookupIndex = el => {
@@ -117,7 +152,7 @@
       };
 
       const index = lookupIndex(e.target);
-      // console.log('index', index);
+
       nextEl = (i => {
         let arr = path;
         return n => {
@@ -139,92 +174,77 @@
           .join('')
           .split('.sty_')
           .join('')
+          .split('.selected2')
+          .join('')
+          .split('.selected')
+          .join('')
       );
 
       chrome.storage.sync.get(domain, d => {
-        let { [domain]: { def: def = [] } = [] } = d;
-        let { [domain]: { sty: sty = [] } = [] } = d;
-
-        const obj = { def: def, sty: sty };
-
-        obj.def = [...new Set(obj.def.concat(classes))];
+        const { [domain]: data = { def: [], sty: [] } } = d;
 
         if (e.button === 0) {
-          obj.sty = [...new Set(obj.sty.concat(classes))];
+          data.sty = [...new Set(data.sty.concat(classes))];
         }
 
         if (e.button === 2) {
-          obj.sty = [...new Set(obj.sty.concat(classes))].filter(v => !v.includes(classes));
+          data.sty = [...new Set(data.sty.concat(classes))].filter(v => !v.includes(classes));
+          document.removeEventListener('mouseup', mouseup);
         }
 
-        obj.def = obj.def.filter(v => !obj.sty.includes(v));
+        tap && (data.def = [...new Set(data.def.concat(classes))].filter(v => !data.sty.includes(v)));
 
-        chrome.storage.sync.set({ [domain]: obj });
-        console.log(obj);
+        chrome.storage.sync.set({ [domain]: data });
+        console.log(data);
 
-        // console.log('不运用sty:', result);
-        // chrome.storage.sync.set({ [domain]: { def: [...new Set(arr)] } });
+        // document
+        // .querySelectorAll(['.selected2', '.selected'])
+        // .forEach(v => v.classList.remove('selected2', 'selected'));
 
-        /*   let arr = [];
-          if (val1.length) {
-            arr = val1.concat(classes);
-            console.log(arr);
+        // data.sty.length && document.querySelectorAll(data.sty).forEach(v => v.classList.add('selected'));
+        // data.def.length && document.querySelectorAll(data.def).forEach(v => v.classList.add('selected2'));
 
-            arr = arr.map(v => {
-              return v.includes(classes) ? `$${v}` : v;
-            });
-            console.log(arr);
-          } else {
-            arr = val1.concat(`$${classes}`);
-          }
-          */
+        // data.sty.length && (style.sheet.cssRules[2].selectorText = '#sadsadsad');
+        // data.def.length && (style.sheet.cssRules[3].selectorText = '#sadsadsad1213');
 
-        // if (e.button === 2) {
-        //   let arr = [];
-        //   if (val1.length) {
-        //     arr = val1.concat(classes);
-        //     console.log(arr);
+        data.sty.length
+          ? (style.sheet.cssRules[2].selectorText = data.sty)
+          : (style.sheet.cssRules[2].selectorText = '#sadsadsad');
 
-        //     arr = arr.map(v => {
-        //       return v.includes(classes) ? v : `$${v}`;
-        //     });
-        //     console.log(arr);
-        //   } else {
-        //     arr = val1.concat(classes);
-        //   }
+        let arr = data.def.map(v => v.repeat(8));
+        console.log(arr);
 
-        //   chrome.storage.sync.set({ [domain]: [...new Set(arr)] });
-        //   // [1, 3, 4].filter(v => ![1].includes(v));
-        // }
+        data.def.length
+          ? (style.sheet.cssRules[3].selectorText = arr)
+          : (style.sheet.cssRules[3].selectorText = '#sadsadsad1213');
+
+        data.def.length
+          ? (style.sheet.cssRules[4].selectorText = data.def)
+          : (style.sheet.cssRules[4].selectorText = '#sadsadsad13');
       });
-      // let arrn = val1.map(v => (v.includes(classes) ? `${classes}` : v));
-
-      // chrome.storage.sync.set({ [domain2]: [...new Set(val2.concat(classes))] });
-
-      // window.location.reload();
-      // console.log(`选取:`, classes);
     } else {
       console.log(`%c无效元素`, 'color:red');
     }
 
-    stop();
+    // stop();
+    document.removeEventListener('mousewheel', mousewheel);
   };
 
   const exit = e => e.keyCode === 27 && stop();
   const contextmenu = e => e.preventDefault();
 
   const stop = () => {
-    style.sheet && style.remove();
+    // style.sheet && style.remove();
+    style.sheet.cssRules[0].selectorText = '#sdss2323s';
     document.removeEventListener('mouseover', mouseover);
     document.removeEventListener('mouseout', mouseout);
     document.removeEventListener('mousedown', mousedown);
     document.removeEventListener('mouseup', mouseup);
     document.removeEventListener('mousewheel', mousewheel);
     document.removeEventListener('keydown', exit);
-    // console.log('stop');
+    window.removeEventListener('contextmenu', contextmenu);
+    console.log('stop');
   };
-  // e.button === 0 &&
-  // window.removeEventListener('contextmenu', contextmenu);
 
   document.addEventListener('mouseover', mouseover);
   document.addEventListener('mouseout', mouseout);
@@ -232,8 +252,8 @@
   document.addEventListener('mouseup', mouseup);
   document.addEventListener('keydown', exit);
 
-  window.addEventListener('blur', stop);
-  window.addEventListener('visibilitychange', stop);
+  // window.addEventListener('blur', stop);
+  // window.addEventListener('visibilitychange', stop);
   document.addEventListener(
     'click',
     e => {
@@ -243,6 +263,7 @@
     { once: true }
   );
 }
+
 
 // document.addEventListener('click', mousedown);
 // document.removeEventListener('click', mousedown);
@@ -288,3 +309,92 @@
 // } else {
 //   chrome.storage.sync.set({ [document.domain]: classes });
 // }
+
+// console.log('不运用sty:', result);
+// chrome.storage.sync.set({ [domain]: { def: [...new Set(arr)] } });
+
+/*   let arr = [];
+          if (val1.length) {
+            arr = val1.concat(classes);
+            console.log(arr);
+
+            arr = arr.map(v => {
+              return v.includes(classes) ? `$${v}` : v;
+            });
+            console.log(arr);
+          } else {
+            arr = val1.concat(`$${classes}`);
+          }
+          */
+
+// if (e.button === 2) {
+//   let arr = [];
+//   if (val1.length) {
+//     arr = val1.concat(classes);
+//     console.log(arr);
+
+//     arr = arr.map(v => {
+//       return v.includes(classes) ? v : `$${v}`;
+//     });
+//     console.log(arr);
+//   } else {
+//     arr = val1.concat(classes);
+//   }
+
+//   chrome.storage.sync.set({ [domain]: [...new Set(arr)] });
+//   // [1, 3, 4].filter(v => ![1].includes(v));
+// }
+// let arrn = val1.map(v => (v.includes(classes) ? `${classes}` : v));
+
+// chrome.storage.sync.set({ [domain2]: [...new Set(val2.concat(classes))] });
+
+// window.location.reload();
+// console.log(`选取:`, classes);
+// [...e.children].forEach();
+// let b = document.querySelector(classes).contains(document.querySelector(classes2));
+// let b = e.target.classList.contains(classes2);
+// let css = style.sheet.cssRules[2].selectorText.split(',');
+// let css = style.sheet.cssRules[2].selectorText;
+// let b = css.includes(`${classes2}`);
+// css.some(v => v.includes)
+// console.log('??', css, `${classes2}`);
+// console.log(b);
+// b ? (css = css.filter(v => !v.includes(classes2))) : (css += `,${classes}`);
+// console.log('classes2', classes2);
+// console.log('classes', classes);
+// if (`${classes2}` === `${classes}`) {
+//   console.log('=====');
+//   css = css.split(`,${classes2}`).join('');
+//   console.log('css', css);
+// } else {
+//   css += `,${classes}`;
+// }
+
+// css = css.split(`.${classes2}`).join('');
+// console.log('css1', css);
+// (css = css.split(`,${classes2}`).join(''));
+
+// let a =
+
+// style.sheet.cssRules[2].selectorText = css;
+// console.log(a);
+// console.log('css2', css);
+
+// previous.forEach(v => {
+//   if (v.classList && v !== e.target) {
+//     v.classList.contains('selected2') && v.classList.remove('selected2');
+//   }
+// });
+// next.forEach(v => {
+//   v.classList && v.classList.contains('selected2') && v.classList.remove('selected2');
+// });
+
+// const bool = previous.some(v => (v !== e.target ? v.classList.contains('selected') : false));
+
+// if (!bool) {
+//   e.target.classList.remove('selected');
+//   e.target.classList.toggle('selected2');
+// }
+
+// style.sheet.cssRules[0].selectorText = '#xxxxxxxxx';
+// style.sheet.cssRules[1].selectorText = '#xxxxxxxxx';

@@ -11,11 +11,10 @@ export default _ => {
 
   useEffect(() => {
     Change();
+    chrome.storage.onChanged.addListener((changes, areaName) => {
+      Change();
+    });
   }, []);
-
-  chrome.storage.onChanged.addListener((changes, areaName) => {
-    Change();
-  });
 
   const List = () => {
     const arr = [];
@@ -24,7 +23,9 @@ export default _ => {
         <div key={i}>
           <h3>
             <span style={{ color: 'green', margin: '0 16px' }}>{i}</span>
-            <span style={{ background: '#87ff79', padding: '0 10px' }}>{Data[i].join()}</span>
+            <span style={{ background: '#87ff79', padding: '0 10px' }}>
+              {JSON.stringify(Data[i], null, '  ')}
+            </span>
           </h3>
         </div>
       );

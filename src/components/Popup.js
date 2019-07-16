@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -26,7 +26,9 @@ export default _ => {
     setOnce(false);
     window.close();
   };
-
+  useEffect(() => {
+    // Selection();
+  }, []);
   const clear = () => {
     chrome.storage.sync.clear(console.log.bind(console, 'Clear'));
   };
@@ -47,13 +49,7 @@ export default _ => {
       >
         翻译
       </Button>
-      <Button
-        color='secondary'
-        variant='contained'
-        fullWidth
-        className={classes.button}
-        onClick={stop}
-      >
+      <Button color='secondary' variant='contained' fullWidth className={classes.button} onClick={stop}>
         不翻译
       </Button>
       <Button color='secondary' variant='contained' fullWidth onClick={clear}>

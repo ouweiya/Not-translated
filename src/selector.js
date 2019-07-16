@@ -52,7 +52,7 @@
     selec(e.target);
     style.sheet.cssRules[0].selectorText = classes;
     classes.length && (style.sheet.cssRules[1].selectorText = classes + ' *');
-    console.log('selectorText:', style.sheet.cssRules[0].selectorText);
+    // console.log('selectorText:', style.sheet.cssRules[0].selectorText);
   };
 
   const mouseout = _ => {
@@ -106,7 +106,7 @@
     const next = [...e.target.children].reduce(iteration, []);
     const path = previous.concat(next);
 
-    console.log('path', path);
+    // console.log('path', path);
 
     if (path.length) {
       const lookupIndex = el => {
@@ -117,7 +117,7 @@
       };
 
       const index = lookupIndex(e.target);
-      console.log('index', index);
+      // console.log('index', index);
       nextEl = (i => {
         let arr = path;
         return n => {
@@ -133,39 +133,76 @@
   const mouseup = e => {
     if (classes.length) {
       let domain = document.domain;
-      let domain2 = `_$${domain}`;
-      chrome.storage.sync.get([domain, `_$${domain}`], d => {
-        console.log('data:', d);
-        let [key1, key2] = Object.keys(d);
-        let [val1, val2] = Object.values(d);
-        console.log(key1, key2, '=====');
-        console.log(val1, val2, '-----');
+      classes = classes.map(v =>
+        v
+          .split('.notranslate')
+          .join('')
+          .split('.sty_')
+          .join('')
+      );
+
+      chrome.storage.sync.get(domain, d => {
+        let { [domain]: { def: def = [] } = [] } = d;
+        let { [domain]: { sty: sty = [] } = [] } = d;
+
+        const obj = { def: def, sty: sty };
+
+        obj.def = [...new Set(obj.def.concat(classes))];
 
         if (e.button === 0) {
-          let classes1 = classes;
-          // console.log('0000:', key1, classes);
-          if (val1) {
-            classes1 = [...new Set(val1.concat(classes1))];
-            chrome.storage.sync.set({ [domain]: classes1 });
-          } else {
-            chrome.storage.sync.set({ [domain]: classes1 });
-          }
+          obj.sty = [...new Set(obj.sty.concat(classes))];
         }
 
         if (e.button === 2) {
-          let classes1 = classes;
-          // console.log('222', val2, classes);
-          if (val2) {
-            classes1 = [...new Set(val2.concat(classes1))];
-            chrome.storage.sync.set({ [domain2]: classes1 });
-          } else {
-            chrome.storage.sync.set({ [domain2]: classes1 });
-          }
+          obj.sty = [...new Set(obj.sty.concat(classes))].filter(v => !v.includes(classes));
         }
+
+        obj.def = obj.def.filter(v => !obj.sty.includes(v));
+
+        chrome.storage.sync.set({ [domain]: obj });
+        console.log(obj);
+
+        // console.log('不运用sty:', result);
+        // chrome.storage.sync.set({ [domain]: { def: [...new Set(arr)] } });
+
+        /*   let arr = [];
+          if (val1.length) {
+            arr = val1.concat(classes);
+            console.log(arr);
+
+            arr = arr.map(v => {
+              return v.includes(classes) ? `$${v}` : v;
+            });
+            console.log(arr);
+          } else {
+            arr = val1.concat(`$${classes}`);
+          }
+          */
+
+        // if (e.button === 2) {
+        //   let arr = [];
+        //   if (val1.length) {
+        //     arr = val1.concat(classes);
+        //     console.log(arr);
+
+        //     arr = arr.map(v => {
+        //       return v.includes(classes) ? v : `$${v}`;
+        //     });
+        //     console.log(arr);
+        //   } else {
+        //     arr = val1.concat(classes);
+        //   }
+
+        //   chrome.storage.sync.set({ [domain]: [...new Set(arr)] });
+        //   // [1, 3, 4].filter(v => ![1].includes(v));
+        // }
       });
+      // let arrn = val1.map(v => (v.includes(classes) ? `${classes}` : v));
+
+      // chrome.storage.sync.set({ [domain2]: [...new Set(val2.concat(classes))] });
 
       // window.location.reload();
-      console.log(`选取:`, classes);
+      // console.log(`选取:`, classes);
     } else {
       console.log(`%c无效元素`, 'color:red');
     }
@@ -184,7 +221,7 @@
     document.removeEventListener('mouseup', mouseup);
     document.removeEventListener('mousewheel', mousewheel);
     document.removeEventListener('keydown', exit);
-    console.log('stop');
+    // console.log('stop');
   };
   // e.button === 0 &&
   // window.removeEventListener('contextmenu', contextmenu);

@@ -126,13 +126,11 @@
   let previous = [];
   let tap = true;
 
-
   const mousedown = e => {
     e.stopPropagation();
     e.preventDefault();
     clearStyle();
     document.addEventListener('mousewheel', mousewheel, { passive: false });
-    // window.addEventListener('contextmenu', contextmenu, { once: true });
     window.addEventListener('contextmenu', contextmenu);
     document.addEventListener('mouseup', mouseup);
 
@@ -163,6 +161,7 @@
         };
       })(index);
     }
+    console.log('mousedown');
   };
 
   const mouseup = e => {
@@ -232,16 +231,22 @@
 
   const exit = e => e.keyCode === 27 && stop();
   const contextmenu = e => e.preventDefault();
+  const click = e => {
+    e.stopPropagation();
+    e.preventDefault();
+  };
 
   const stop = () => {
     // style.sheet && style.remove();
     style.sheet.cssRules[0].selectorText = '#sdss2323s';
+    style.sheet.cssRules[1].selectorText = '#sdss2323sg';
     document.removeEventListener('mouseover', mouseover);
     document.removeEventListener('mouseout', mouseout);
     document.removeEventListener('mousedown', mousedown);
     document.removeEventListener('mouseup', mouseup);
     document.removeEventListener('mousewheel', mousewheel);
     document.removeEventListener('keydown', exit);
+    document.removeEventListener('click', click);
     window.removeEventListener('contextmenu', contextmenu);
     console.log('stop');
   };
@@ -251,19 +256,12 @@
   document.addEventListener('mousedown', mousedown);
   document.addEventListener('mouseup', mouseup);
   document.addEventListener('keydown', exit);
+  document.addEventListener('click', click);
 
   // window.addEventListener('blur', stop);
   // window.addEventListener('visibilitychange', stop);
-  document.addEventListener(
-    'click',
-    e => {
-      e.stopPropagation();
-      e.preventDefault();
-    },
-    { once: true }
-  );
-}
 
+}
 
 // document.addEventListener('click', mousedown);
 // document.removeEventListener('click', mousedown);

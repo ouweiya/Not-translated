@@ -1,6 +1,7 @@
 {
   const style = document.createElement('style');
   document.head.insertAdjacentElement('beforeend', style);
+  // 选择器父级
   style.sheet.insertRule(
     `
     #a123456789_ {
@@ -10,16 +11,18 @@
   `,
     style.sheet.cssRules.length
   );
-  style.sheet.insertRule(
-    `
-    #a123456_ {
-      background-color: #82b4e680 !important;
-      box-shadow: none !important;
-    }
-  `,
-    style.sheet.cssRules.length
-  );
+  // background-color: #82b4e680 !important;
+  //  box-shadow: none !important;
+  //  选择器子级
+  // style.sheet.insertRule(
+  //   `
+  //   #a123456_ {
 
+  //   }
+  // `,
+  //   style.sheet.cssRules.length
+  // );
+  // 蓝色
   style.sheet.insertRule(
     `
     #aa1ssd23456789_ {
@@ -29,24 +32,25 @@
   `,
     style.sheet.cssRules.length
   );
+  // 绿色
   style.sheet.insertRule(
     `
     #aa123dsds6789_ {
       background-color: #abe88f7d !important;
+      box-shadow: 0 0 0 1px #44b311;
     }
   `,
     style.sheet.cssRules.length
   );
-  style.sheet.insertRule(
-    `
-    #aa1234ag56711_ {
-      box-shadow: 0 0 0 1px #44b311 !important;
-    }
-  `,
-    style.sheet.cssRules.length
-  );
+  // style.sheet.insertRule(
+  //   `
+  //   #aa1234ag56711_ {
+  //     box-shadow: 0 0 0 1px #44b311;
+  //   }
+  // `,
+  //   style.sheet.cssRules.length
+  // );
 
-  // let cc = '.selected2.selected2.selected2.selected2.selected2.selected2';
   let classes = [];
 
   const selec = el => {
@@ -55,21 +59,24 @@
     const column = /^(td)$/i.test(tagName);
     const row = /^(th)$/i.test(tagName);
 
-    if (el.className && !/^(textarea)$/i.test(tagName)) {
+    const className = [...el.classList].filter(v => !['notranslate', 'sty_'].some(i => new RegExp(`^${i}$`).test(v)));
+
+    if (className.length && !/^(textarea)$/i.test(tagName)) {
       classes = [].concat([...el.classList].map(c => `.${c}`).join(''));
     } else if (code) {
       classes = [].concat(tagName.toLowerCase());
     } else if (column) {
-      const i = [].concat(el.cellIndex);
-      classes = `td:nth-of-type(${i + 1})`;
+      const i = el.cellIndex;
+      classes = [].concat(`td:nth-of-type(${i + 1})`);
     } else if (row) {
-      const i = [].concat(el.parentElement.rowIndex);
-      classes = `tr:nth-of-type(${i + 1})`;
+      const i = el.parentElement.rowIndex;
+      classes = [].concat(`tr:nth-of-type(${i + 1})`);
     } else if (el.id) {
       classes = [].concat(`#${el.id}`);
     } else {
       classes = [];
     }
+    console.log(classes);
   };
 
   const mouseover = e => {
@@ -77,16 +84,18 @@
     e.preventDefault();
 
     selec(e.target);
-    const arr = classes.map(v => v.repeat(2));
-    style.sheet.cssRules[0].selectorText = arr;
-    classes.length && (style.sheet.cssRules[1].selectorText = classes + ' *');
+    // console.log(classes);
+
+    style.sheet.cssRules[0].selectorText = classes;
+    // classes.length && (style.sheet.cssRules[1].selectorText = classes + ' *');
+    // console.log('selectorText:', style.sheet.cssRules[0].selectorText);
   };
   // style.sheet.cssRules[0].selectorText = classes;
-  // console.log('selectorText:', style.sheet.cssRules[0].selectorText);
+  // [...style.sheet.cssRules].forEach(cssRules => (cssRules.selectorText = '.a12345'));
 
   const mouseout = _ => {
-    // [...style.sheet.cssRules].forEach(cssRules => (cssRules.selectorText = '.a12345'));
-    [...style.sheet.cssRules].forEach((cssRules, i) => i < 2 && (cssRules.selectorText = '.a12345xx'));
+    // [...style.sheet.cssRules].forEach((cssRules, i) => i < 2 && (cssRules.selectorText = '.a12345xx'));
+    style.sheet.cssRules[0].selectorText = '.a12345xx';
   };
 
   const filter = el => {
@@ -94,21 +103,28 @@
     let bool = (el.className && !/^(textarea)$/i.test(el.tagName)) || code || el.id;
     return !!bool;
   };
-
-  const iteration = (acc, i) => {
-    acc.push(i);
-    return i.children.length ? [...i.children].reduce(iteration, acc) : acc.filter(i => filter(i));
+  // acc.filter(i => filter(i))
+  // const iteration = (acc, i) => {
+  //   acc.push(i);
+  //   // return i.children.length ? [...i.children].reduce(iteration, acc) : acc;
+  //   return [...i.children].reduce(iteration, acc);
+  // };
+  const iteration3 = (acc, i) => {
+    // acc.push(i);
+    return i.children.length ? [...i.children].reduce(iteration, acc) : acc.concat(acc.filter(i => filter(i)));
   };
 
-  const clearStyle = _ => {
-    document.querySelectorAll('.sty').forEach(el => el.classList.remove('sty'));
-  };
+  const iteration = (acc, i) => (acc.push(i), [...i.children].reduce(iteration, acc));
+
+  // const clearStyle = _ => {
+  //   document.querySelectorAll('.sty').forEach(el => el.classList.remove('sty'));
+  // };
 
   let nextEl = null;
 
   const mousewheel = e => {
     e.preventDefault();
-    clearStyle();
+    // clearStyle();
 
     if (e.wheelDelta > 0) {
       selec(nextEl(-1));
@@ -117,8 +133,9 @@
       selec(nextEl(1));
       style.sheet.cssRules[0].selectorText = classes;
     }
-    console.log('classes', document.querySelector(classes.length ? classes : 'rerere'));
-    classes.length && (style.sheet.cssRules[1].selectorText = classes + ' *');
+    console.log('什么问题:', classes);
+    console.log('classes', document.querySelector(classes.length ? classes : '.red52rere'));
+    // classes.length && (style.sheet.cssRules[1].selectorText = classes + ' *');
   };
   // console.log(e.wheelDelta);
 
@@ -138,7 +155,14 @@
       .slice(0, -2)
       .reverse()
       .filter(i => filter(i));
-    next = [...e.target.children].reduce(iteration, []);
+
+    // next = [...e.target.children].reduce(iteration, []);
+    next = [...e.target.children].reduce(iteration, []).filter(v => filter(v));
+    // next = [...e.target.children].reduce(iteration, []).filter(v => filter(v));
+    // .filter(v => filter(v));
+    // console.log(111, [...e.target.children].reduce(iteration, []).filter(v => filter(v)));
+    // console.log([...e.target.children]);
+    console.log('next:', next);
     const path = previous.concat(next);
 
     if (path.length) {
@@ -167,59 +191,34 @@
   const mouseup = e => {
     if (classes.length) {
       let domain = document.domain;
-      classes = classes.map(v =>
-        v
-          .split('.notranslate')
-          .join('')
-          .split('.sty_')
-          .join('')
-          .split('.selected2')
-          .join('')
-          .split('.selected')
-          .join('')
-      );
-
       chrome.storage.sync.get(domain, d => {
         const { [domain]: data = { def: [], sty: [] } } = d;
 
         if (e.button === 0) {
           data.sty = [...new Set(data.sty.concat(classes))];
         }
-
+        // new RegExp(`^${t}$`, 'i')
         if (e.button === 2) {
-          data.sty = [...new Set(data.sty.concat(classes))].filter(v => !v.includes(classes));
+          // data.sty = [...new Set(data.sty.concat(classes))].filter(v => !v.includes(classes));
+          data.sty = [...new Set(data.sty.concat(classes))].filter(v => !new RegExp(`^${v}$`, 'i').test(classes));
           document.removeEventListener('mouseup', mouseup);
         }
 
-        tap && (data.def = [...new Set(data.def.concat(classes))].filter(v => !data.sty.includes(v)));
+        // data.def = [...new Set(data.def.concat(classes))].filter(v => !data.sty.includes(v));
+        data.def = [...new Set(data.def.concat(classes))].filter(
+          v => !data.sty.some(i => new RegExp(`^${i}$`, 'i').test(v))
+        );
 
         chrome.storage.sync.set({ [domain]: data });
         console.log(data);
 
-        // document
-        // .querySelectorAll(['.selected2', '.selected'])
-        // .forEach(v => v.classList.remove('selected2', 'selected'));
-
-        // data.sty.length && document.querySelectorAll(data.sty).forEach(v => v.classList.add('selected'));
-        // data.def.length && document.querySelectorAll(data.def).forEach(v => v.classList.add('selected2'));
-
-        // data.sty.length && (style.sheet.cssRules[2].selectorText = '#sadsadsad');
-        // data.def.length && (style.sheet.cssRules[3].selectorText = '#sadsadsad1213');
-
         data.sty.length
-          ? (style.sheet.cssRules[2].selectorText = data.sty)
-          : (style.sheet.cssRules[2].selectorText = '#sadsadsad');
-
-        let arr = data.def.map(v => v.repeat(8));
-        console.log(arr);
+          ? (style.sheet.cssRules[1].selectorText = data.sty)
+          : (style.sheet.cssRules[1].selectorText = '#sadsadsad');
 
         data.def.length
-          ? (style.sheet.cssRules[3].selectorText = arr)
-          : (style.sheet.cssRules[3].selectorText = '#sadsadsad1213');
-
-        data.def.length
-          ? (style.sheet.cssRules[4].selectorText = data.def)
-          : (style.sheet.cssRules[4].selectorText = '#sadsadsad13');
+          ? (style.sheet.cssRules[2].selectorText = data.def)
+          : (style.sheet.cssRules[2].selectorText = '#sadsadsad1213');
       });
     } else {
       console.log(`%c无效元素`, 'color:red');
@@ -239,7 +238,7 @@
   const stop = () => {
     // style.sheet && style.remove();
     style.sheet.cssRules[0].selectorText = '#sdss2323s';
-    style.sheet.cssRules[1].selectorText = '#sdss2323sg';
+    // style.sheet.cssRules[1].selectorText = '#sdss2323sg';
     document.removeEventListener('mouseover', mouseover);
     document.removeEventListener('mouseout', mouseout);
     document.removeEventListener('mousedown', mousedown);
@@ -260,7 +259,6 @@
 
   // window.addEventListener('blur', stop);
   // window.addEventListener('visibilitychange', stop);
-
 }
 
 // document.addEventListener('click', mousedown);
@@ -396,3 +394,17 @@
 
 // style.sheet.cssRules[0].selectorText = '#xxxxxxxxx';
 // style.sheet.cssRules[1].selectorText = '#xxxxxxxxx';
+
+// document
+// .querySelectorAll(['.selected2', '.selected'])
+// .forEach(v => v.classList.remove('selected2', 'selected'));
+
+// data.sty.length && document.querySelectorAll(data.sty).forEach(v => v.classList.add('selected'));
+// data.def.length && document.querySelectorAll(data.def).forEach(v => v.classList.add('selected2'));
+
+// data.sty.length && (style.sheet.cssRules[2].selectorText = '#sadsadsad');
+// data.def.length && (style.sheet.cssRules[3].selectorText = '#sadsadsad1213');
+
+// data.def.length
+//   ? (style.sheet.cssRules[4].selectorText = data.def)
+//   : (style.sheet.cssRules[4].selectorText = '#sadsadsad13');

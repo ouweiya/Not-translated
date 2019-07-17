@@ -2,7 +2,7 @@
   "name": "Translation fix",
   "version": "1.0",
   "description": "修复翻译排版格式",
-  "permissions": ["tabs", "activeTab", "storage", "<all_urls>"],
+  "permissions": ["tabs", "activeTab", "storage", "<all_urls>", "webNavigation"],
   "options_page": "index.html#options",
   "background": {
     "scripts": ["background.js"],

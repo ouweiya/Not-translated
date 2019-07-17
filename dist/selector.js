@@ -11,17 +11,6 @@
   `,
     style.sheet.cssRules.length
   );
-  // background-color: #82b4e680 !important;
-  //  box-shadow: none !important;
-  //  选择器子级
-  // style.sheet.insertRule(
-  //   `
-  //   #a123456_ {
-
-  //   }
-  // `,
-  //   style.sheet.cssRules.length
-  // );
   // 蓝色
   style.sheet.insertRule(
     `
@@ -42,14 +31,16 @@
   `,
     style.sheet.cssRules.length
   );
-  // style.sheet.insertRule(
-  //   `
-  //   #aa1234ag56711_ {
-  //     box-shadow: 0 0 0 1px #44b311;
-  //   }
-  // `,
-  //   style.sheet.cssRules.length
-  // );
+  // 黄色
+  style.sheet.insertRule(
+    `
+    #aa1234ag56711_ {
+      background-color: #e6d07c81 !important;
+      box-shadow: 0 0 0 1px #be9911;
+    }
+  `,
+    style.sheet.cssRules.length
+  );
 
   let classes = [];
 
@@ -59,42 +50,36 @@
     const column = /^(td)$/i.test(tagName);
     const row = /^(th)$/i.test(tagName);
 
-    const className = [...el.classList].filter(v => !['notranslate', 'sty_'].some(i => new RegExp(`^${i}$`).test(v)));
+    const className = [...el.classList].filter(
+      v => !['notranslate', 'translate'].some(i => new RegExp(`^${i}$`).test(v))
+    );
 
-    if (className.length && !/^(textarea)$/i.test(tagName)) {
-      classes = [].concat([...el.classList].map(c => `.${c}`).join(''));
-    } else if (code) {
-      classes = [].concat(tagName.toLowerCase());
+    if (row) {
+      const i = el.cellIndex;
+      classes = [].concat(`th:nth-of-type(${i + 1})`);
     } else if (column) {
       const i = el.cellIndex;
       classes = [].concat(`td:nth-of-type(${i + 1})`);
-    } else if (row) {
-      const i = el.parentElement.rowIndex;
-      classes = [].concat(`tr:nth-of-type(${i + 1})`);
+    } else if (className.length && !/^(textarea)$/i.test(tagName)) {
+      classes = [].concat(className.map(c => `.${c}`).join(''));
+    } else if (code) {
+      classes = [].concat(tagName.toLowerCase());
     } else if (el.id) {
       classes = [].concat(`#${el.id}`);
     } else {
       classes = [];
     }
-    console.log(classes);
   };
 
   const mouseover = e => {
     e.stopPropagation();
     e.preventDefault();
-
     selec(e.target);
-    // console.log(classes);
 
     style.sheet.cssRules[0].selectorText = classes;
-    // classes.length && (style.sheet.cssRules[1].selectorText = classes + ' *');
-    // console.log('selectorText:', style.sheet.cssRules[0].selectorText);
   };
-  // style.sheet.cssRules[0].selectorText = classes;
-  // [...style.sheet.cssRules].forEach(cssRules => (cssRules.selectorText = '.a12345'));
 
   const mouseout = _ => {
-    // [...style.sheet.cssRules].forEach((cssRules, i) => i < 2 && (cssRules.selectorText = '.a12345xx'));
     style.sheet.cssRules[0].selectorText = '.a12345xx';
   };
 
@@ -103,29 +88,13 @@
     let bool = (el.className && !/^(textarea)$/i.test(el.tagName)) || code || el.id;
     return !!bool;
   };
-  // acc.filter(i => filter(i))
-  // const iteration = (acc, i) => {
-  //   acc.push(i);
-  //   // return i.children.length ? [...i.children].reduce(iteration, acc) : acc;
-  //   return [...i.children].reduce(iteration, acc);
-  // };
-  const iteration3 = (acc, i) => {
-    // acc.push(i);
-    return i.children.length ? [...i.children].reduce(iteration, acc) : acc.concat(acc.filter(i => filter(i)));
-  };
 
   const iteration = (acc, i) => (acc.push(i), [...i.children].reduce(iteration, acc));
-
-  // const clearStyle = _ => {
-  //   document.querySelectorAll('.sty').forEach(el => el.classList.remove('sty'));
-  // };
 
   let nextEl = null;
 
   const mousewheel = e => {
     e.preventDefault();
-    // clearStyle();
-
     if (e.wheelDelta > 0) {
       selec(nextEl(-1));
       style.sheet.cssRules[0].selectorText = classes;
@@ -133,20 +102,15 @@
       selec(nextEl(1));
       style.sheet.cssRules[0].selectorText = classes;
     }
-    console.log('什么问题:', classes);
-    console.log('classes', document.querySelector(classes.length ? classes : '.red52rere'));
-    // classes.length && (style.sheet.cssRules[1].selectorText = classes + ' *');
   };
   // console.log(e.wheelDelta);
 
   let next = [];
   let previous = [];
-  let tap = true;
 
   const mousedown = e => {
     e.stopPropagation();
     e.preventDefault();
-    clearStyle();
     document.addEventListener('mousewheel', mousewheel, { passive: false });
     window.addEventListener('contextmenu', contextmenu);
     document.addEventListener('mouseup', mouseup);
@@ -155,14 +119,7 @@
       .slice(0, -2)
       .reverse()
       .filter(i => filter(i));
-
-    // next = [...e.target.children].reduce(iteration, []);
     next = [...e.target.children].reduce(iteration, []).filter(v => filter(v));
-    // next = [...e.target.children].reduce(iteration, []).filter(v => filter(v));
-    // .filter(v => filter(v));
-    // console.log(111, [...e.target.children].reduce(iteration, []).filter(v => filter(v)));
-    // console.log([...e.target.children]);
-    console.log('next:', next);
     const path = previous.concat(next);
 
     if (path.length) {
@@ -185,40 +142,62 @@
         };
       })(index);
     }
-    console.log('mousedown');
   };
+
+  const setStyle = data => {
+    style.sheet.cssRules[0].selectorText = '.DGGgbhrtrt_';
+    style.sheet.cssRules[1].selectorText = data.sty.length ? data.sty : '.DGGgbhrtrt_';
+    style.sheet.cssRules[2].selectorText = data.def.length ? data.def : '.DGGgbhrtrt_';
+    style.sheet.cssRules[3].selectorText = data.mid.length ? data.mid : '.DGGgbhrtrt_';
+  };
+
+  chrome.storage.sync.get(document.domain, d => {
+    const { [document.domain]: data } = d;
+    data && setStyle(data);
+  });
 
   const mouseup = e => {
     if (classes.length) {
       let domain = document.domain;
       chrome.storage.sync.get(domain, d => {
-        const { [domain]: data = { def: [], sty: [] } } = d;
-
+        const { [domain]: data = { def: [], sty: [], mid: [] } } = d;
+        const bool = v => new RegExp(`^${v.replace(/(?=[.,/() ])/gi, '\\')}$`, 'i').test(classes);
         if (e.button === 0) {
-          data.sty = [...new Set(data.sty.concat(classes))];
+          if (data.sty.some(v => bool(v))) {
+            data.sty = data.sty.filter(v => !bool(v));
+          } else {
+            data.sty = [...new Set(data.sty.concat(classes))];
+            data.def = data.def.filter(v => !bool(v));
+            data.mid = data.mid.filter(v => !bool(v));
+          }
         }
-        // new RegExp(`^${t}$`, 'i')
+
         if (e.button === 2) {
-          // data.sty = [...new Set(data.sty.concat(classes))].filter(v => !v.includes(classes));
-          data.sty = [...new Set(data.sty.concat(classes))].filter(v => !new RegExp(`^${v}$`, 'i').test(classes));
+          if (data.def.some(v => bool(v))) {
+            data.def = data.def.filter(v => !bool(v));
+          } else {
+            data.def = [...new Set(data.def.concat(classes))];
+            data.sty = data.sty.filter(v => !bool(v));
+            data.mid = data.mid.filter(v => !bool(v));
+          }
+
+          document.removeEventListener('mouseup', mouseup);
+        }
+        if (e.button === 1) {
+          if (data.mid.some(v => bool(v))) {
+            data.mid = data.mid.filter(v => !bool(v));
+          } else {
+            data.mid = [...new Set(data.mid.concat(classes))];
+            data.sty = data.sty.filter(v => !bool(v));
+            data.def = data.def.filter(v => !bool(v));
+          }
+
           document.removeEventListener('mouseup', mouseup);
         }
 
-        // data.def = [...new Set(data.def.concat(classes))].filter(v => !data.sty.includes(v));
-        data.def = [...new Set(data.def.concat(classes))].filter(
-          v => !data.sty.some(i => new RegExp(`^${i}$`, 'i').test(v))
-        );
-
         chrome.storage.sync.set({ [domain]: data });
         console.log(data);
-
-        data.sty.length
-          ? (style.sheet.cssRules[1].selectorText = data.sty)
-          : (style.sheet.cssRules[1].selectorText = '#sadsadsad');
-
-        data.def.length
-          ? (style.sheet.cssRules[2].selectorText = data.def)
-          : (style.sheet.cssRules[2].selectorText = '#sadsadsad1213');
+        setStyle(data);
       });
     } else {
       console.log(`%c无效元素`, 'color:red');
@@ -238,7 +217,6 @@
   const stop = () => {
     // style.sheet && style.remove();
     style.sheet.cssRules[0].selectorText = '#sdss2323s';
-    // style.sheet.cssRules[1].selectorText = '#sdss2323sg';
     document.removeEventListener('mouseover', mouseover);
     document.removeEventListener('mouseout', mouseout);
     document.removeEventListener('mousedown', mousedown);
@@ -259,6 +237,13 @@
 
   // window.addEventListener('blur', stop);
   // window.addEventListener('visibilitychange', stop);
+
+  chrome.storage.sync.get('aaa', d => {
+    console.log('sync');
+  });
+  chrome.storage.local.get('aaa', d => {
+    console.log('local');
+  });
 }
 
 // document.addEventListener('click', mousedown);
@@ -408,3 +393,45 @@
 // data.def.length
 //   ? (style.sheet.cssRules[4].selectorText = data.def)
 //   : (style.sheet.cssRules[4].selectorText = '#sadsadsad13');
+/*  if (className.length && !/^(textarea)$/i.test(tagName)) {
+      // classes = [].concat([...el.classList].map(c => `.${c}`).join(''));
+      classes = [].concat(className.map(c => `.${c}`).join(''));
+    } else if (code) {
+      classes = [].concat(tagName.toLowerCase());
+    } else if (column) {
+      const i = el.cellIndex;
+      classes = [].concat(`td:nth-of-type(${i + 1})`);
+    } else if (row) {
+      const i = el.parentElement.rowIndex;
+      // classes = [].concat(`tr:nth-of-type(${i + 1})`);
+      classes = [].concat(`th:nth-of-type(${i + 1})`);
+    } else if (el.id) {
+      classes = [].concat(`#${el.id}`);
+    } else {
+      classes = [];
+    } */
+// console.log('className:', className);
+// console.log('classes:', classes);
+
+// background-color: #82b4e680 !important;
+//  box-shadow: none !important;
+//  选择器子级
+// style.sheet.insertRule(
+//   `
+//   #a123456_ {
+
+//   }
+// `,
+//   style.sheet.cssRules.length
+// );
+
+// console.log(r);
+// console.log(new RegExp(`^${r}$`, 'i').test(classes));
+// console.log('RegExp', /^td:nth-of-type\(1\)$/.test(classes));
+// data.sty.some(v => new RegExp(`^${v}$`, 'i').test(classes))
+// const bool = data.sty.some(v => new RegExp(`^${v.replace(/(?=[.,/() ])/g, '\\')}$`, 'i').test(classes));
+// console.log(bool);
+
+// data.sty = [...new Set(data.sty.concat(classes))].filter(v => !v.includes(classes));
+// data.sty = [...new Set(data.sty.concat(classes))].filter(v => !new RegExp(`^${v}$`, 'i').test(classes));
+// data.mid = [...new Set(data.mid.concat(classes))];

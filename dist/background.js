@@ -1,6 +1,9 @@
 chrome.tabs.onUpdated.addListener((tabId, status, tab) => {
-  status.status === 'complete' && chrome.tabs.sendMessage(tabId, 'TRANSLATE');
+  // status.status === 'complete' &&
+  chrome.tabs.sendMessage(tabId, 'TRANSLATE');
 });
+
+
 
 // chrome.commands.onCommand.addListener(command => {
 //   console.log('Command:', command);

@@ -31,6 +31,14 @@ export default _ => {
   }, []);
   const clear = () => {
     chrome.storage.sync.clear(console.log.bind(console, 'Clear'));
+
+    chrome.tabs.getSelected(tab => {
+      chrome.tabs.executeScript(tab.id, {
+        code: `window.location.reload();`,
+        runAt: 'document_start'
+      });
+    });
+
   };
   const stop = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, tab => {

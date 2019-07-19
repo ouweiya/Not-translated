@@ -54,7 +54,9 @@
       v => !['notranslate', 'translate'].some(i => new RegExp(`^${i}$`).test(v))
     );
 
-    if (row) {
+    if (code) {
+      classes = [].concat(tagName.toLowerCase());
+    } else if (row) {
       const i = el.cellIndex;
       classes = [].concat(`th:nth-of-type(${i + 1})`);
     } else if (column) {
@@ -62,8 +64,6 @@
       classes = [].concat(`td:nth-of-type(${i + 1})`);
     } else if (className.length && !/^(textarea)$/i.test(tagName)) {
       classes = [].concat(className.map(c => `.${c}`).join(''));
-    } else if (code) {
-      classes = [].concat(tagName.toLowerCase());
     } else if (el.id) {
       classes = [].concat(`#${el.id}`);
     } else {
@@ -207,7 +207,10 @@
     document.removeEventListener('mousewheel', mousewheel);
   };
 
-  const exit = e => e.keyCode === 27 && stop();
+  const exit = e => {
+    // console.log(e);
+    e.keyCode === 27 && stop();
+  };
   const contextmenu = e => e.preventDefault();
   const click = e => {
     e.stopPropagation();
@@ -215,8 +218,9 @@
   };
 
   const stop = () => {
-    // style.sheet && style.remove();
-    style.sheet.cssRules[0].selectorText = '#sdss2323s';
+    style.sheet && style.remove();
+    // [...style.sheet.cssRules].forEach(v => (v.selectorText = '#sdss2323s'));
+
     document.removeEventListener('mouseover', mouseover);
     document.removeEventListener('mouseout', mouseout);
     document.removeEventListener('mousedown', mousedown);
@@ -235,15 +239,8 @@
   document.addEventListener('keydown', exit);
   document.addEventListener('click', click);
 
-  // window.addEventListener('blur', stop);
-  // window.addEventListener('visibilitychange', stop);
-
-  chrome.storage.sync.get('aaa', d => {
-    console.log('sync');
-  });
-  chrome.storage.local.get('aaa', d => {
-    console.log('local');
-  });
+  window.addEventListener('blur', stop);
+  window.addEventListener('visibilitychange', stop);
 }
 
 // document.addEventListener('click', mousedown);

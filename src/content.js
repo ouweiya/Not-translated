@@ -1,40 +1,64 @@
-let NOOP = _ => {};
-let closureRun = null;
 const defcss = `font-family:'Fira Code Regular', Consolas !important;font-size: 14px !important;`;
 
-let run = null;
+const All = (arr, mid) => {
+  // arr.length && document.querySelectorAll(arr).forEach(el => el.classList.add('notranslate'));
+  // mid.length && document.querySelectorAll(mid).forEach(el => el.classList.add('translate'));
 
-let once = domain => {
-  once = NOOP;
-  chrome.storage.sync.get(domain, ({ [domain]: data = {} }) => {
-    run = (data => {
-      const { def = [] } = data;
-      const { sty = [] } = data;
-      const { mid = [] } = data;
-      const { css = '' } = data;
-      const arr = def.concat(sty);
-      const styArr = sty.map(v => `${v}, ${v} *`);
+  if (arr.length) {
+    const arrEl = document.querySelectorAll(arr);
+    // const arrEl = document.querySelectorAll('pre');
+    for (let i = 0, len = arrEl.length; i < len; i++) {
+      arrEl[i].classList.add('notranslate');
+    }
+  }
 
-      let sty_ = document.createElement('style');
-      document.head.insertAdjacentElement('beforeend', sty_);
-      sty_.sheet.insertRule(`.sty_, .sty_ * { ${css || defcss} }`, sty_.sheet.cssRules.length);
-      sty_.sheet.cssRules[0].selectorText = styArr;
-      console.log('data-100', data);
+  if (mid.length) {
+    const midEl = document.querySelectorAll(mid);
+    for (let i = 0, len = midEl.length; i < len; i++) {
+      midEl[i].classList.add('translate');
+    }
+  }
 
-      return () => {
-        arr.length && document.querySelectorAll(arr).forEach(el => el.classList.add('notranslate'));
-        mid.length && document.querySelectorAll(mid).forEach(el => el.classList.add('translate'));
-        console.log('nooooooooo');
-      };
-    })(data);
-  });
+  console.log('nooooooooo');
 };
 
-chrome.runtime.onMessage.addListener(_ => {
-  const domain = document.domain;
-  once(domain);
-  run && run();
+let once = data => {
+  once = (data => {
+    const { def = [] } = data;
+    const { sty = [] } = data;
+    const { mid = [] } = data;
+    const { css = '' } = data;
+    const arr = def.concat(sty);
+    All(arr, mid);
+
+    const styArr = sty.map(v => `${v}, ${v} *`);
+
+    let sty_ = document.createElement('style');
+    document.head.insertAdjacentElement('beforeend', sty_);
+    sty_.sheet.insertRule(`.sty_, .sty_ * { ${css || defcss} }`, sty_.sheet.cssRules.length);
+    sty_.sheet.cssRules[0].selectorText = styArr;
+    console.log('注入样式', data);
+
+    return _ => All(arr, mid);
+  })(data);
+};
+
+chrome.runtime.onMessage.addListener(mes => {
+  once(mes);
 });
+
+// once = _ => {};
+// chrome.storage.sync.get(domain, ({ [domain]: data = {} }) => {});
+
+// function nodeInsertedCallback(event) {
+//   console.log(event.relatedNode);
+// }
+// document.addEventListener('DOMContentLoaded', e => {
+//   document.addEventListener('DOMNodeInserted', nodeInsertedCallback);
+// });
+
+// console.log(once);
+// run && run();
 
 // let fun = domain => {
 //   fun = NOOP;

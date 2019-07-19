@@ -38,12 +38,21 @@ export default _ => {
         runAt: 'document_start'
       });
     });
-
   };
   const stop = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, tab => {
-      chrome.tabs.sendMessage(tab[0].id, 'NOTRANSLATE');
-    });
+    // chrome.tabs.query({ active: true, currentWindow: true }, tab => {
+    //   chrome.tabs.sendMessage(tab[0].id, 'NOTRANSLATE');
+    // });
+    // chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    //   chrome.tabs.reload(tabs[0].id);
+    // });
+    // chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    //   chrome.tabs.update(tabs[0].id, { url: tabs[0].url });
+    // });
+    // chrome.tabs.query({ active: true, currentWindow: true }, function(arrayOfTabs) {
+    //   var code = 'window.location.reload();';
+    //   chrome.tabs.executeScript(arrayOfTabs[0].id, { code: code });
+    // });
   };
 
   return (

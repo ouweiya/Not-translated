@@ -1,31 +1,37 @@
-let oldDomain = {};
 let globalData = {};
+chrome.storage.sync.get(null, data => {
+  globalData = data;
+  console.log('globalData', globalData);
+});
 
 chrome.tabs.onUpdated.addListener((tabId, status, tab) => {
-  const url = new URL(tab.url);
-  const newDomain = url.hostname;
-  console.log('oldDomain', oldDomain);
+  const domain = new URL(tab.url).hostname;
+  globalData[domain] && chrome.tabs.sendMessage(tabId, globalData[domain]);
+});
 
-  // if (oldDomain.includes(newDomain)) {
+chrome.storage.onChanged.addListener(e => {
+  chrome.storage.sync.get(null, data => {
+    globalData = data;
+    console.log('onChanged:', globalData);
+  });
+});
+
+/*
+let oldDomain = {};
+
+  // console.log('oldDomain', oldDomain);
   if (oldDomain[newDomain]) {
-    chrome.tabs.sendMessage(tabId, globalData[newDomain]);
-    console.log('two-222222', globalData[newDomain]);
+    // console.log('two-222222', globalData[newDomain]);
   } else {
-    // oldDomain.push(newDomain);
     oldDomain[newDomain] = true;
     chrome.storage.sync.get(newDomain, ({ [newDomain]: data = {} }) => {
       globalData[newDomain] = data;
       chrome.tabs.sendMessage(tabId, data);
-      console.log('one-1111');
     });
-  }
+    // console.log('one-1111');
+  } */
 
-  chrome.storage.onChanged.addListener(e => {
-    chrome.storage.sync.get(null, data => {
-      globalData = data;
-    });
-  });
-  /*   if (newDomain !== oldDomain.includes()) {
+/*   if (newDomain !== oldDomain.includes()) {
     oldDomain = newDomain;
     chrome.storage.sync.get(newDomain, ({ [newDomain]: data = {} }) => {
       globalData = data;
@@ -36,7 +42,6 @@ chrome.tabs.onUpdated.addListener((tabId, status, tab) => {
     chrome.tabs.sendMessage(tabId, globalData);
     console.log('two-222222');
   } */
-});
 
 // chrome.webNavigation.onDOMContentLoaded.addListener(e => console.log(e));
 // chrome.commands.onCommand.addListener(command => {

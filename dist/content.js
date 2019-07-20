@@ -1,12 +1,8 @@
 const defcss = `font-family:'Fira Code Regular', Consolas !important;font-size: 14px !important;`;
 
 const All = (arr, mid) => {
-  // arr.length && document.querySelectorAll(arr).forEach(el => el.classList.add('notranslate'));
-  // mid.length && document.querySelectorAll(mid).forEach(el => el.classList.add('translate'));
-
   if (arr.length) {
     const arrEl = document.querySelectorAll(arr);
-    // const arrEl = document.querySelectorAll('pre');
     for (let i = 0, len = arrEl.length; i < len; i++) {
       arrEl[i].classList.add('notranslate');
     }
@@ -24,16 +20,12 @@ const All = (arr, mid) => {
 
 let once = data => {
   once = (data => {
-    const { def = [] } = data;
-    const { sty = [] } = data;
-    const { mid = [] } = data;
-    const { css = '' } = data;
+    const { def = [], sty = [], mid = [], css = '' } = data;
     const arr = def.concat(sty);
     All(arr, mid);
 
     const styArr = sty.map(v => `${v}, ${v} *`);
-
-    let sty_ = document.createElement('style');
+    const sty_ = document.createElement('style');
     document.head.insertAdjacentElement('beforeend', sty_);
     sty_.sheet.insertRule(`.sty_, .sty_ * { ${css || defcss} }`, sty_.sheet.cssRules.length);
     sty_.sheet.cssRules[0].selectorText = styArr;
@@ -46,6 +38,10 @@ let once = data => {
 chrome.runtime.onMessage.addListener(mes => {
   once(mes);
 });
+
+
+// arr.length && document.querySelectorAll(arr).forEach(el => el.classList.add('notranslate'));
+// mid.length && document.querySelectorAll(mid).forEach(el => el.classList.add('translate'));
 
 // once = _ => {};
 // chrome.storage.sync.get(domain, ({ [domain]: data = {} }) => {});

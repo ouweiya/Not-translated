@@ -53,7 +53,7 @@
     const className = [...el.classList].filter(
       v => !['notranslate', 'translate'].some(i => new RegExp(`^${i}$`).test(v))
     );
-
+    // t.some(v => ["th:nth-of-type(3", "th:nth-of-type()"].includes(v))
     if (code) {
       classes = [].concat(tagName.toLowerCase());
     } else if (row) {
@@ -162,6 +162,7 @@
       chrome.storage.sync.get(domain, d => {
         const { [domain]: data = { def: [], sty: [], mid: [] } } = d;
         const bool = v => new RegExp(`^${v.replace(/(?=[.,/() ])/gi, '\\')}$`, 'i').test(classes);
+        // data.sty.includes(...classes);
         if (e.button === 0) {
           if (data.sty.some(v => bool(v))) {
             data.sty = data.sty.filter(v => !bool(v));
@@ -202,7 +203,7 @@
     } else {
       console.log(`%c无效元素`, 'color:red');
     }
-
+    console.log('classes:', classes);
     // stop();
     document.removeEventListener('mousewheel', mousewheel);
   };
@@ -239,7 +240,7 @@
   document.addEventListener('keydown', exit);
   document.addEventListener('click', click);
 
-  window.addEventListener('blur', stop);
+  // window.addEventListener('blur', stop);
   window.addEventListener('visibilitychange', stop);
 }
 

@@ -15,11 +15,11 @@ const All = (arr, mid) => {
     }
   }
 
-  console.log('nooooooooo');
+  console.log('🆗');
 };
 
-let once = data => {
-  once = (data => {
+let once = data =>
+  (once = (data => {
     const { def = [], sty = [], mid = [], css = '' } = data;
     const arr = def.concat(sty);
     All(arr, mid);
@@ -32,13 +32,9 @@ let once = data => {
     console.log('注入样式', data);
 
     return _ => All(arr, mid);
-  })(data);
-};
+  })(data));
 
-chrome.runtime.onMessage.addListener(mes => {
-  once(mes);
-});
-
+chrome.runtime.onMessage.addListener(mes => once(mes));
 
 // arr.length && document.querySelectorAll(arr).forEach(el => el.classList.add('notranslate'));
 // mid.length && document.querySelectorAll(mid).forEach(el => el.classList.add('translate'));

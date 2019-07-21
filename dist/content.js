@@ -15,7 +15,7 @@ const All = (arr, mid) => {
     }
   }
 
-  console.log('🆗');
+  console.log('oooooooo');
 };
 
 let once = data =>

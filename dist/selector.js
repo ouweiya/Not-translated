@@ -49,7 +49,7 @@
     const code = /^(pre|code|table|tbody|kbd|var|samp)$/i.test(tagName);
     const column = /^(td)$/i.test(tagName);
     const row = /^(th)$/i.test(tagName);
-
+    const h = /^(h1|h2|h3|h4|h5|h6)$/i.test(tagName);
     const className = [...el.classList].filter(v => !['notranslate', 'translate'].includes(v));
 
     if (code) {
@@ -62,6 +62,8 @@
       classes = [].concat(`td:nth-of-type(${i + 1})`);
     } else if (className.length && !/^(textarea)$/i.test(tagName)) {
       classes = [].concat(className.map(c => `.${c}`).join(''));
+    } else if (h) {
+      classes = [].concat(tagName.toLowerCase());
     } else if (el.id) {
       classes = [].concat(`#${el.id}`);
     } else {

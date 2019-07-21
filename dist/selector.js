@@ -50,10 +50,8 @@
     const column = /^(td)$/i.test(tagName);
     const row = /^(th)$/i.test(tagName);
 
-    const className = [...el.classList].filter(
-      v => !['notranslate', 'translate'].some(i => new RegExp(`^${i}$`).test(v))
-    );
-    // t.some(v => ["th:nth-of-type(3", "th:nth-of-type()"].includes(v))
+    const className = [...el.classList].filter(v => !['notranslate', 'translate'].includes(v));
+
     if (code) {
       classes = [].concat(tagName.toLowerCase());
     } else if (row) {
@@ -75,17 +73,14 @@
     e.stopPropagation();
     e.preventDefault();
     selec(e.target);
-
     style.sheet.cssRules[0].selectorText = classes;
   };
 
-  const mouseout = _ => {
-    style.sheet.cssRules[0].selectorText = '.a12345xx';
-  };
+  const mouseout = _ => (style.sheet.cssRules[0].selectorText = '.a12345xx');
 
   const filter = el => {
     const code = /^(pre|code|table|tbody|td|th)$/i.test(el.tagName);
-    let bool = (el.className && !/^(textarea)$/i.test(el.tagName)) || code || el.id;
+    const bool = (el.classList.length && !/^(textarea)$/i.test(el.tagName)) || code || el.id;
     return !!bool;
   };
 
@@ -105,9 +100,6 @@
   };
   // console.log(e.wheelDelta);
 
-  let next = [];
-  let previous = [];
-
   const mousedown = e => {
     e.stopPropagation();
     e.preventDefault();
@@ -115,11 +107,11 @@
     window.addEventListener('contextmenu', contextmenu);
     document.addEventListener('mouseup', mouseup);
 
-    previous = e.path
+    const previous = e.path
       .slice(0, -2)
       .reverse()
       .filter(i => filter(i));
-    next = [...e.target.children].reduce(iteration, []).filter(v => filter(v));
+    const next = [...e.target.children].reduce(iteration, []).filter(v => filter(v));
     const path = previous.concat(next);
 
     if (path.length) {
@@ -158,39 +150,37 @@
 
   const mouseup = e => {
     if (classes.length) {
-      let domain = document.domain;
+      const domain = document.domain;
       chrome.storage.sync.get(domain, d => {
         const { [domain]: data = { def: [], sty: [], mid: [] } } = d;
-        const bool = v => new RegExp(`^${v.replace(/(?=[.,/() ])/gi, '\\')}$`, 'i').test(classes);
-        // data.sty.includes(...classes);
+
         if (e.button === 0) {
-          if (data.sty.some(v => bool(v))) {
-            data.sty = data.sty.filter(v => !bool(v));
+          if (data.sty.includes(...classes)) {
+            data.sty = data.sty.filter(v => !classes.includes(v));
           } else {
             data.sty = [...new Set(data.sty.concat(classes))];
-            data.def = data.def.filter(v => !bool(v));
-            data.mid = data.mid.filter(v => !bool(v));
+            data.def = data.def.filter(v => !classes.includes(v));
+            data.mid = data.mid.filter(v => !classes.includes(v));
           }
         }
-
         if (e.button === 2) {
-          if (data.def.some(v => bool(v))) {
-            data.def = data.def.filter(v => !bool(v));
+          if (data.def.includes(...classes)) {
+            data.def = data.def.filter(v => !classes.includes(v));
           } else {
             data.def = [...new Set(data.def.concat(classes))];
-            data.sty = data.sty.filter(v => !bool(v));
-            data.mid = data.mid.filter(v => !bool(v));
+            data.sty = data.sty.filter(v => !classes.includes(v));
+            data.mid = data.mid.filter(v => !classes.includes(v));
           }
 
           document.removeEventListener('mouseup', mouseup);
         }
         if (e.button === 1) {
-          if (data.mid.some(v => bool(v))) {
-            data.mid = data.mid.filter(v => !bool(v));
+          if (data.mid.includes(...classes)) {
+            data.mid = data.mid.filter(v => !classes.includes(v));
           } else {
             data.mid = [...new Set(data.mid.concat(classes))];
-            data.sty = data.sty.filter(v => !bool(v));
-            data.def = data.def.filter(v => !bool(v));
+            data.sty = data.sty.filter(v => !classes.includes(v));
+            data.def = data.def.filter(v => !classes.includes(v));
           }
 
           document.removeEventListener('mouseup', mouseup);
@@ -204,24 +194,15 @@
       console.log(`%c无效元素`, 'color:red');
     }
     console.log('classes:', classes);
-    // stop();
     document.removeEventListener('mousewheel', mousewheel);
   };
 
-  const exit = e => {
-    // console.log(e);
-    e.keyCode === 27 && stop();
-  };
+  const exit = e => e.keyCode === 27 && stop();
   const contextmenu = e => e.preventDefault();
-  const click = e => {
-    e.stopPropagation();
-    e.preventDefault();
-  };
+  const click = e => (e.stopPropagation(), e.preventDefault());
 
   const stop = () => {
     style.sheet && style.remove();
-    // [...style.sheet.cssRules].forEach(v => (v.selectorText = '#sdss2323s'));
-
     document.removeEventListener('mouseover', mouseover);
     document.removeEventListener('mouseout', mouseout);
     document.removeEventListener('mousedown', mousedown);
@@ -236,13 +217,24 @@
   document.addEventListener('mouseover', mouseover);
   document.addEventListener('mouseout', mouseout);
   document.addEventListener('mousedown', mousedown);
-  document.addEventListener('mouseup', mouseup);
   document.addEventListener('keydown', exit);
   document.addEventListener('click', click);
 
   // window.addEventListener('blur', stop);
-  window.addEventListener('visibilitychange', stop);
+  // window.addEventListener('visibilitychange', stop);
 }
+
+// document.addEventListener('mouseup', mouseup);
+
+// v => !['notranslate', 'translate'].some(i => new RegExp(`^${i}$`).test(v))
+
+// if (data.sty.some(v => bool(v))) {
+// data.sty = data.sty.filter(v => !bool(v));
+
+// [...style.sheet.cssRules].forEach(v => (v.selectorText = '#sdss2323s'));
+
+// const bool = v => new RegExp(`^${v.replace(/(?=[.,/() ])/gi, '\\')}$`, 'i').test(classes);
+// data.sty.includes(...classes);
 
 // document.addEventListener('click', mousedown);
 // document.removeEventListener('click', mousedown);

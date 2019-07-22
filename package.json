@@ -17,6 +17,7 @@
     "react-app-polyfill": "^1.0.1",
     "react-dom": "^16.8.6",
     "style-loader": "^0.23.1",
+    "typeface-roboto": "^0.0.75",
     "webpack": "^4.35.3",
     "webpack-cli": "^3.3.5",
     "write-file-webpack-plugin": "^4.5.0"

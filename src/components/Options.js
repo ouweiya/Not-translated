@@ -1,42 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import 'typeface-roboto';
+import App from './OptionsPage/App';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider } from '@material-ui/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
+import blue from '@material-ui/core/colors/blue';
 
-export default _ => {
-  const [Data, setData] = useState(null);
-  const Change = () => {
-    chrome.storage.sync.get(null, d => {
-      console.log('option:', d);
-      setData(d);
-    });
-  };
+const theme = createMuiTheme({
+  palette: {
+    primary: blue,
+    secondary: blue
+  }
+});
 
-  useEffect(() => {
-    Change();
-    chrome.storage.onChanged.addListener((changes, areaName) => {
-      Change();
-    });
-  }, []);
+const Options = _ => (
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <App />
+  </ThemeProvider>
+);
 
-  const List = () => {
-    const arr = [];
-    for (let i in Data) {
-      arr.push(
-        <div key={i}>
-          <h3>
-            <span style={{ color: 'green', margin: '0 16px' }}>{i}</span>
-            <span style={{ background: '#87ff79', padding: '0 10px' }}>
-              {JSON.stringify(Data[i], null, '  ')}
-            </span>
-          </h3>
-        </div>
-      );
-    }
-
-    return arr;
-  };
-
-  return (
-    <>
-      <List />
-    </>
-  );
-};
+export default Options;

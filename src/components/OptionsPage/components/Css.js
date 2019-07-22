@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
@@ -19,28 +19,48 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function OutlinedTextFields() {
+const debounce = (() => {
+  let time = null;
+  return (domain, data) => {
+    clearTimeout(time);
+    time = setTimeout(() => {
+      // console.log(domain, data);
+      // chrome.storage.sync.set({ '127.0.0.1': { css: 'dsdsdfasfdfr342343242342343' } });
+    }, 500);
+  };
+})();
+
+export default function OutlinedTextFields({ domain, dataAll }) {
   const classes = useStyles();
   const code = `font-family: 'Fira Code Regular', Consolas !important;\nfont-size: 14px !important;`;
-  const [Css, setCss] = useState(code);
+  const [globalCss, setGlobalCss] = useState(code);
+  const [localCss, setLocalCss] = useState(code);
 
-  const handleChange = e => {
-    console.log(e.target.value);
-    setCss(e.target.value);
-  };
+  useEffect(() => {
+    // console.log(localCss);
+    // debounce(domain, { ...dataAll[domain], css: localCss });
+    chrome.storage.sync.set({ [domain]: { ...dataAll[domain], css: localCss } });
+    // chrome.storage.sync.set({ [domain]: { ...dataAll[domain], css: localCss } });
+    // console.log('ccc', domain, dataAll);
+    // console.log({ ...dataAll[domain], css: localCss });
+  }, [localCss]);
+
+  useEffect(() => {
+    console.log(globalCss);
+  }, [globalCss]);
 
   return (
     <Container maxWidth='md'>
       <TextField
-        label={'www.google.com'}
+        label={domain || '未选择'}
         multiline
         rows='8'
         className={classes.textField}
         margin='normal'
         variant='outlined'
         fullWidth
-        value={Css}
-        onChange={handleChange}
+        value={localCss}
+        onChange={e => setLocalCss(e.target.value)}
         id='text'
       />
 
@@ -52,8 +72,8 @@ export default function OutlinedTextFields() {
         margin='normal'
         variant='outlined'
         fullWidth
-        value={Css}
-        onChange={handleChange}
+        value={globalCss}
+        onChange={e => setGlobalCss(e.target.value)}
         id='text'
       />
     </Container>

@@ -1,7 +1,4 @@
-.MuiOutlinedInput-inputMultiline {
-  font-family: 'Fira Code Regular' !important;
-  font-size: 14px !important;
-}
-.MuiInputBase-fullWidth {
-  padding: 16px !important;
+#text {
+  font-family: 'Fira Code Regular';
+  font-size: 14px
 }

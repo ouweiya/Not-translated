@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -48,16 +48,42 @@ const useStyles = makeStyles(theme => ({
 
 export default function PermanentDrawerLeft() {
   const classes = useStyles();
-  let arr = ['127.0.0.1', 'github.com', 'material-ui.com'];
-  arr = [...Array(10)].reduce((acc, v) => acc.concat(arr), []);
-
-  const [domain, setDomain] = useState(arr);
+  const [domain, setDomain] = useState([]);
   const [txt, setFilter] = useState('');
   const ref = useRef(null);
 
   const scroll = e => {
     e.target.scrollTop > 30 && ref.current.classList.add(classes.shadow);
     e.target.scrollTop < 30 && ref.current.classList.remove(classes.shadow);
+  };
+  const [currentData, setCurrentData] = useState({});
+
+  const Change = domain => {
+    chrome.storage.sync.get(null, d => {
+      console.log('初始化', d);
+      setDomain(Object.keys(d));
+      setCurrentData({ domain, data: d });
+      // console.log('props', { domain, data: d });
+    });
+  };
+
+  useEffect(() => {
+    Change();
+    chrome.storage.onChanged.addListener((changes, areaName) => {
+      // console.log(...Object.keys(changes));
+      Change(...Object.keys(changes));
+    });
+  }, []);
+
+  useEffect(() => {
+    // console.log(currentData);
+  }, [currentData]);
+
+  const getCurrentData = domain => {
+    chrome.storage.sync.get(null, d => {
+      setCurrentData({ domain, data: d });
+      // console.log({ domain, data: d });
+    });
   };
 
   return (
@@ -82,7 +108,7 @@ export default function PermanentDrawerLeft() {
           {domain
             .filter(v => v.includes(txt))
             .map((v, i) => (
-              <ListItem button key={i}>
+              <ListItem button key={i} onClick={e => getCurrentData(v)}>
                 <ListItemText primary={v} className={classes.txt} />
               </ListItem>
             ))}
@@ -90,7 +116,7 @@ export default function PermanentDrawerLeft() {
       </Drawer>
 
       <main className={classes.content}>
-        <Table />
+        <Table {...currentData} />
       </main>
     </div>
   );

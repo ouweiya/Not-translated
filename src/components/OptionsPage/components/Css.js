@@ -15,12 +15,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(4, 1)
   },
   last: {
-    marginBottom: theme.spacing(8),
-    fontFamily: 'Fira Code Regular',
-    color: 'pink'
-  },
-  root: {
-    padding: 0
+    marginBottom: theme.spacing(8)
   }
 }));
 
@@ -46,6 +41,7 @@ export default function OutlinedTextFields() {
         fullWidth
         value={Css}
         onChange={handleChange}
+        id='text'
       />
 
       <TextField
@@ -58,6 +54,7 @@ export default function OutlinedTextFields() {
         fullWidth
         value={Css}
         onChange={handleChange}
+        id='text'
       />
     </Container>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -47,9 +47,6 @@ const useStyles = makeStyles(theme => ({
     overflowX: 'auto'
   }
 }));
-
-const createData = (sty, def, mid, id) => ({ sty, def, mid, id });
-const rows = [...Array(10)].map((v, i) => createData(`Jack-${i}`, i, i, i));
 
 const headRows = [
   { id: 'sty', numeric: false, label: '运用样式' },
@@ -129,10 +126,10 @@ const useStyles2 = makeStyles(theme => ({
 const InputMe = React.memo(
   ({ val, row, ...props }) => {
     const classes = useStyles2();
-    let toggle = true;
+    // let toggle = true;
     const click = e => {
       e.stopPropagation();
-      (toggle = !toggle) && e.target.blur();
+      // (toggle = !toggle) && e.target.blur();
     };
 
     return (
@@ -140,7 +137,7 @@ const InputMe = React.memo(
         className={classes.root}
         value={val === undefined ? '' : val}
         onClick={click}
-        onBlur={e => toggle || (toggle = true)}
+        // onBlur={e => toggle || (toggle = true)}
         {...props}
       />
     );
@@ -184,26 +181,30 @@ const EnhancedTableHead2 = React.memo(
 
 const debounce = (_ => {
   let time = null;
-  return data => {
+  return (domain, data) => {
     clearTimeout(time);
     time = setTimeout(() => {
-      const fn = (sty, def, mid, css) => ({ sty, def, mid, css });
-      let arr = ['sty', 'def', 'mid', 'css'].map(name =>
-        data.reduce((acc, v) => (v[name] ? acc.concat(v[name]) : acc), [])
-      );
-      let obj = fn(...arr);
-      console.log(obj);
-    }, 1000);
+      const fn = (sty, def, mid) => ({ sty, def, mid });
+      let arr = ['sty', 'def', 'mid'].map(name => data.reduce((acc, v) => (v[name] ? acc.concat(v[name]) : acc), []));
+      // arr = arr.map(v => [...new Set(v)]);
+      // console.log(arr);
+      let result = fn(...arr);
+      console.log('result', { [domain]: result });
+      chrome.storage.sync.set({ [domain]: result });
+    }, 500);
   };
 })();
 
-export default function EnhancedTable() {
+const createData = (sty, def, mid, id) => ({ sty, def, mid, id });
+
+export default function EnhancedTable({ domain, data: dataAll }) {
   const classes = useStyles();
-  const [data, setData] = useState(rows);
+  const [data, setData] = useState([]);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
   const [selected, setSelected] = useState([]);
   const [toggle, setToggle] = useState(true);
+  const ref = useRef(true);
 
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === 'desc';
@@ -213,11 +214,31 @@ export default function EnhancedTable() {
     console.log('reverse');
   };
 
-  useEffect(() => {
-    console.log('之后', data);
-    // console.log('selected', selected);
-    // debounce(data);
-  }, [selected, data]);
+  useEffect(
+    _ => {
+      if (dataAll && dataAll[domain]) {
+        let { sty, def, mid } = dataAll[domain];
+        const i = Object.values(dataAll[domain]).reduce((acc, v) => (v.length > acc ? (acc = v.length) : acc), 0);
+        const rows = [...Array(i)].map((v, i) => createData(sty[i] || '', def[i] || '', mid[i] || '', i));
+        setData(rows);
+        // console.log(rows);
+      }
+    },
+    [domain, dataAll]
+  );
+
+  useEffect(
+    _ => {
+      if (ref.current) {
+        ref.current = false;
+        return;
+      }
+      !data.length && chrome.storage.sync.remove(domain);
+      console.log('之后', data);
+      debounce(domain, data);
+    },
+    [data]
+  );
 
   const handleSelectAllClick = event => {
     console.log('event.target.checked', event.target.checked);
@@ -249,6 +270,8 @@ export default function EnhancedTable() {
     const val = e.target.value;
     const newRow = { ...row, [field]: val };
     setData(data => data.map(v => (v === row ? newRow : v)));
+    console.log('edit:', data.map(v => (v === row ? newRow : v)));
+    console.log('是否重复 => ', data.map(v => v[field]).includes(val));
   };
 
   return (

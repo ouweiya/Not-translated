@@ -15,7 +15,7 @@ const All = (arr, mid) => {
     }
   }
 
-  console.log('oooooooo');
+  // console.log('oooooooo');
 };
 
 let once = data =>
@@ -29,7 +29,7 @@ let once = data =>
     document.head.insertAdjacentElement('beforeend', sty_);
     sty_.sheet.insertRule(`.sty_, .sty_ * { ${css || defcss} }`, sty_.sheet.cssRules.length);
     sty_.sheet.cssRules[0].selectorText = styArr;
-    console.log('注入样式', data);
+    // console.log('注入样式', data);
 
     return _ => All(arr, mid);
   })(data));

@@ -60,7 +60,7 @@
     } else if (column) {
       const i = el.cellIndex;
       classes = [].concat(`td:nth-of-type(${i + 1})`);
-    } else if (className.length && !/^(textarea)$/i.test(tagName)) {
+    } else if (className.length && !/^(textarea|iframe)$/i.test(tagName)) {
       classes = [].concat(className.map(c => `.${c}`).join(''));
     } else if (h) {
       classes = [].concat(tagName.toLowerCase());

@@ -6,6 +6,9 @@ import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
 
+import { connect } from 'react-redux';
+import { activateGeod, closeGeod } from './redux';
+
 const theme = createMuiTheme({
   palette: {
     primary: blue,
@@ -20,4 +23,18 @@ const Options = _ => (
   </ThemeProvider>
 );
 
-export default Options;
+const mapStateToProps = state => ({
+  geod: state.geod
+});
+
+const mapDispatchToProps = {
+  activateGeod,
+  closeGeod
+};
+
+const OptionsContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Options);
+
+export default OptionsContainer;

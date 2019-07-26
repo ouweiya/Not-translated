@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { Fragment as f, createElement as e } from 'react';
 import 'typeface-roboto';
-import App from './OptionsPage/App';
+import Options from './OptionsPage/index';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
-
-import { connect } from 'react-redux';
-import { activateGeod, closeGeod } from './redux';
+import Store from './OptionsPage/Store';
 
 const theme = createMuiTheme({
   palette: {
@@ -16,25 +14,4 @@ const theme = createMuiTheme({
   }
 });
 
-const Options = _ => (
-  <ThemeProvider theme={theme}>
-    <CssBaseline />
-    <App />
-  </ThemeProvider>
-);
-
-const mapStateToProps = state => ({
-  geod: state.geod
-});
-
-const mapDispatchToProps = {
-  activateGeod,
-  closeGeod
-};
-
-const OptionsContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Options);
-
-export default OptionsContainer;
+export default e(ThemeProvider, { theme }, e(CssBaseline), e(Store, null, e(Options)));

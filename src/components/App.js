@@ -1,21 +1,11 @@
-import React from 'react';
+import React, { createElement as e, Fragment as f } from 'react';
 import Popup from './Popup';
 import Options from './Options';
-import { Provider } from 'react-redux';
-import { store } from './redux';
 
 const App = () => {
-  return (
-    <>
-      {window.location.hash === '#popup' ? (
-        <Popup />
-      ) : (
-        <Provider store={store}>
-          <Options />
-        </Provider>
-      )}
-    </>
-  );
+  const El = window.location.hash === '#popup' ? e(Popup) : Options;
+  return e(f, null, El);
 };
 
 export default App;
+// e(Store, null, Options)

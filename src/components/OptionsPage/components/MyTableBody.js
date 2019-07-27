@@ -5,10 +5,10 @@ import TableCell from '@material-ui/core/TableCell';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import { Context } from '../Store';
+import InputMe from './MyInput';
 
 const MyTableBody = _ => {
   const [{ data, selected, rows, domain }, dispatch] = useContext(Context);
-  // const [localData, setLocalData] = useState(data);
   const createData = (sty, def, mid, id) => ({ sty, def, mid, id });
 
   useEffect(() => {
@@ -18,6 +18,12 @@ const MyTableBody = _ => {
       const rows = [...Array(i)].map((v, i) => createData(sty[i] || '', def[i] || '', mid[i] || '', i));
       console.log(rows, 111);
       dispatch({ type: 'rows', rows });
+
+      if (!rows.length) {
+        const obj = { ...data };
+        delete obj[domain];
+        dispatch({ type: 'data', data: obj });
+      }
     }
     return () => {
       dispatch({ type: 'selected', selected: [] });
@@ -32,7 +38,7 @@ const MyTableBody = _ => {
 
   return (
     <TableBody>
-      {1 ? (
+      {rows.length ? (
         rows.map((row, i) => {
           return (
             <TableRow hover onClick={e => handleClick(e, row.id)} key={i} selected={selected.includes(row.id)}>
@@ -40,16 +46,13 @@ const MyTableBody = _ => {
                 <Checkbox checked={selected.includes(row.id)} />
               </TableCell>
               <TableCell scope='row'>
-                {row.sty}
-                {/* <InputMe val={row.sty} onChange={edit('sty', row)} row={row} /> */}
+                <InputMe row={row} field='sty' />
               </TableCell>
               <TableCell align='center'>
-                {row.def}
-                {/* <InputMe val={row.def} onChange={edit('def', row)} row={row} /> */}
+                <InputMe row={row} field='def' />
               </TableCell>
               <TableCell align='center'>
-                {row.mid}
-                {/* <InputMe val={row.mid} onChange={edit('mid', row)} row={row} /> */}
+                <InputMe row={row} field='mid' />
               </TableCell>
             </TableRow>
           );
@@ -68,4 +71,3 @@ const MyTableBody = _ => {
 };
 
 export default MyTableBody;
-// selected.includes(id) ? setSelected(selected.filter(v => v !== id)) : setSelected(selected.concat(id));

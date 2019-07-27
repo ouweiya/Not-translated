@@ -40,7 +40,7 @@ export default _ => {
   const ref = useRef(null);
   const [txt, setFilter] = useState('');
   const [currentData, setCurrentData] = useState({});
-  const [{ data }, dispatch] = useContext(Context);
+  const [{ data, domain }, dispatch] = useContext(Context);
   // console.log(11, useContext(Context));
   // console.log('抽屉:', data);
 
@@ -56,7 +56,7 @@ export default _ => {
     .map((v, i) =>
       e(
         ListItem,
-        { button: true, key: i, onClick: e => dispatch({ type: 'domain', domain: v }) },
+        { button: true, key: i, onClick: e => dispatch({ type: 'domain', domain: v }), selected: domain === v },
         e(ListItemText, { primary: v, className: c.txt })
       )
     );

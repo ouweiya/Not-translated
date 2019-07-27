@@ -1,4 +1,4 @@
-import React, { Fragment as f, createElement as e, useContext, useEffect } from 'react';
+import React, { Fragment as f, createElement as e, useContext, useEffect, useMemo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Fab from '@material-ui/core/Fab';
@@ -24,18 +24,18 @@ const useToolbarStyles = makeStyles(theme => ({
 
 const EnhancedTableToolbar = props => {
   const c = useToolbarStyles();
-  const [{ selected, data, domain, rows }, dispatch] = useContext(Context);
+  const [{ selected, data, domain, rows, toggle }, dispatch] = useContext(Context);
 
   const createData = (sty, def, mid, id) => ({ sty, def, mid, id });
 
   useEffect(() => {
     if (data[domain]) {
-      let bool = Object.values(data[domain]).some(v => v.length);
-      if (!bool) {
-        const obj = { ...data };
-        delete obj[domain];
-        dispatch({ type: 'data', data: obj });
-      }
+      // let bool = Object.values(data[domain]).some(v => v.length);
+      // if (!bool) {
+      // const obj = { ...data };
+      // delete obj[domain];
+      // dispatch({ type: 'data', data: obj });
+      // }
     }
   }, [rows]);
 
@@ -48,37 +48,43 @@ const EnhancedTableToolbar = props => {
 
     let obj = { ...data, [domain]: obj2 };
     dispatch({ type: 'data', data: obj });
+
+    console.log('xxxx', rows2);
+    if (!rows2.length) {
+      const obj = { ...data };
+      delete obj[domain];
+      // dispatch({ type: 'data', data: obj });
+    }
   };
 
   const add = _ => {
     if (rows.every(v => v.sty || v.def || v.mid)) {
       const row = createData(undefined, undefined, undefined, Date.now());
-      console.log(row);
       dispatch({ type: 'rows', rows: rows.concat(row) });
-      console.log(rows);
-
-      let obj2 = ['sty', 'def', 'mid'].reduce((obj, v) => {
-        return { ...obj, [v]: rows.reduce((acc, v2) => (v2[v] ? acc.concat(v2[v]) : acc), []) };
-      }, {});
-
-      let obj = { ...data, [domain]: obj2 };
     }
+
+      // let obj2 = ['sty', 'def', 'mid'].reduce((obj, v) => {
+      //   return { ...obj, [v]: rows.reduce((acc, v2) => (v2[v] ? acc.concat(v2[v]) : acc), []) };
+      // }, {});
   };
 
   const Icon = (title, callback, icon) => {
     return e(Tooltip, { title }, e(Fab, { color: 'primary', className: c.absolute, onClick: callback }, e(icon)));
   };
 
+  const toggleHandler = _ => {
+    dispatch({ type: 'toggle', toggle: !toggle });
+    dispatch({ type: 'selected', selected: [] });
+  };
+
   return e(
     f,
     null,
-    selected.length === 0 ? Icon('Add', add, AddIcon) : Icon('Delete', remove, DeleteIcon),
+    !toggle && (selected.length === 0 ? Icon('Add', add, AddIcon) : Icon('Delete', remove, DeleteIcon)),
     e(Switch, {
       color: 'primary',
-      checked: true,
-      onChange: _ => {
-        console.log(10);
-      },
+      checked: toggle,
+      onChange: toggleHandler,
       value: true,
       className: c.spacer
     })

@@ -78,12 +78,7 @@ const classes = useStyles();
     const a = createData(undefined, undefined, undefined, Date.now());
     setData(data => data.concat(a));
   };
-  const edit = (field, row) => e => {
-    const val = e.target.value;
-    const newRow = { ...row, [field]: val };
-    setData(data => data.map(v => (v === row ? newRow : v)));
-    console.log('是否重复 => ', data.map(v => v[field]).includes(val));
-  };
+
 
 
 

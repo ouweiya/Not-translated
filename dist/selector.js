@@ -10,13 +10,14 @@
     const sty = `#_a_ { background-color: #82b4e680 !important;box-shadow: 0 0 0 1px #0f4d9a !important; }`;
     const def = `#_a_ { background-color: #abe88f7d !important; box-shadow: 0 0 0 1px #44b311; }`;
     const mid = `#_a_ { background-color: #e6d07c81 !important; box-shadow: 0 0 0 1px #be9911; }`;
-    [hover, sty, def, mid].forEach(cssText => style.sheet.insertRule(cssText, style.sheet.cssRules.length));
+    const iframe = `iframe { pointer-events: none; }`;
+    [hover, sty, def, mid, iframe].forEach(cssText => style.sheet.insertRule(cssText, style.sheet.cssRules.length));
     return style;
   };
 
   const selec = el => {
     const tagName = el.tagName;
-    const code = /^(pre|code|table|tbody|kbd|var|samp)$/i.test(tagName);
+    const code = /^(pre|code|table|tbody|kbd|var|samp|iframe)$/i.test(tagName);
     const column = /^(td)$/i.test(tagName);
     const row = /^(th)$/i.test(tagName);
     const h = /^(h1|h2|h3|h4|h5|h6)$/i.test(tagName);
@@ -30,7 +31,7 @@
     } else if (column) {
       const i = el.cellIndex;
       classes = [].concat(`td:nth-of-type(${i + 1})`);
-    } else if (className.length && !/^(textarea|iframe)$/i.test(tagName)) {
+    } else if (className.length && !/^(textarea)$/i.test(tagName)) {
       classes = [].concat(className.map(c => `.${c}`).join(''));
     } else if (h) {
       classes = [].concat(tagName.toLowerCase());
@@ -64,7 +65,7 @@
 
     const filter = el => {
       const code = /^(pre|code|table|tbody|td|th)$/i.test(el.tagName);
-      const bool = (el.classList.length && !/^(textarea|iframe)$/i.test(el.tagName)) || code || el.id;
+      const bool = (el.classList.length && !/^(textarea)$/i.test(el.tagName)) || code || el.id;
       return !!bool;
     };
     const iteration = (acc, i) => (acc.push(i), [...i.children].reduce(iteration, acc));

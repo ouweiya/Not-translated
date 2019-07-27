@@ -12,6 +12,10 @@ const reducer = (state, action) => {
       return { ...state, selected: action.selected };
     case 'domain':
       return { ...state, domain: action.domain };
+    case 'error':
+      return { ...state, error: action.error };
+    case 'toggle':
+      return { ...state, toggle: action.toggle };
     default:
       return state;
   }
@@ -22,7 +26,9 @@ const Store = props => {
     data: {},
     rows: [],
     selected: [],
-    domain: ''
+    domain: '',
+    error: false,
+    toggle: false
   });
 
   useEffect(() => {

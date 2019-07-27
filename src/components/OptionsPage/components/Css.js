@@ -39,7 +39,7 @@ export default function OutlinedTextFields({ domain, dataAll }) {
   useEffect(() => {
     // console.log(localCss);
     // debounce(domain, { ...dataAll[domain], css: localCss });
-    chrome.storage.sync.set({ [domain]: { ...dataAll[domain], css: localCss } });
+    // chrome.storage.sync.set({ [domain]: { ...dataAll[domain], css: localCss } });
     // chrome.storage.sync.set({ [domain]: { ...dataAll[domain], css: localCss } });
     // console.log('ccc', domain, dataAll);
     // console.log({ ...dataAll[domain], css: localCss });

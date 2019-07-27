@@ -1,4 +1,5 @@
 let globalData = {};
+
 chrome.storage.sync.get(null, data => {
   globalData = data;
   console.log('globalData', globalData);
@@ -15,3 +16,6 @@ chrome.storage.onChanged.addListener(e => {
     console.log('onChanged:', globalData);
   });
 });
+
+// lastFocusedWindow
+// currentWindow

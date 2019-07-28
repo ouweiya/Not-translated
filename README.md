@@ -32,7 +32,6 @@
 
 主要是避免选择通用标签, 比如选择了一个 `p` 标签, 结果不言而明.
 
-
 ## 管理页面
 
 在管理你可以查看, 你所选取的元素, 支持增删改, 以及每个域名自定义样式.
@@ -41,9 +40,9 @@
 
 此扩展内置了[Fira Code](https://github.com/tonsky/FiraCode) 字体, 提供三种改变体.
 
-* FiraCode-Regular
-* FiraCode-Medium
-* FiraCode-Retina
+- FiraCode-Regular
+- FiraCode-Medium
+- FiraCode-Retina
 
 ![css.png](img/css.png)
 
@@ -51,7 +50,7 @@
 
 下载压缩文件包, 然后解压, 在 Chrome 中加载.
 
-[Not translated.zip](https://www.google.com)
+[Not translated.zip](https://github.com/ouweiya/Not-translated/releases/download/1.0/dist.zip)
 
 或者将源代码中的`dist`文件, 加载到 Chrome 中也可以.
 
@@ -63,7 +62,7 @@
 
 也就是说在网页加载那一刻, 需要完成对选定 DOM 元素遍历并添加上类名.
 
-在 CSS 方面使用的是动态选择器, 无需遍历, 使用CSS选择器自动运用样式, 总体来说,流畅无阻塞,并且无侵入.
+在 CSS 方面使用的是动态选择器, 无需遍历, 使用 CSS 选择器自动运用样式, 总体来说,流畅无阻塞,并且无侵入.
 
 即使这个扩展不用来修复翻译排版, 也可以用来美化代码排版, 用你喜爱的字体 ,比如 `Fira Code`.
 
@@ -83,4 +82,3 @@
 `Esc` 关闭 (当前文档失焦时, 会不起作用)
 
 ![control.png](img/control.png)
-

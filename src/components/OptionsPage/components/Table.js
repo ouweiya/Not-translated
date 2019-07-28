@@ -60,14 +60,3 @@ export default function EnhancedTable() {
       : e(Css)
   );
 }
-{
-  /* <Table className={classes.table} size='medium'> </Table> */
-}
-/* <EnhancedTableHead2
-numSelected={selected.length}
-order={order}
-orderBy={orderBy}
-onSelectAllClick={handleSelectAllClick}
-onRequestSort={handleRequestSort}
-rowCount={data.length}
-/> */

@@ -23,25 +23,6 @@ export default function PermanentDrawerLeft() {
   const classes = useStyles();
   const [currentData, setCurrentData] = useState({});
 
-  // const Change = domain => {
-  //   chrome.storage.sync.get(null, d => {
-  //     setCurrentData({ domain, data: d });
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   Change();
-  //   chrome.storage.onChanged.addListener((changes, areaName) => {
-  //     Change(...Object.keys(changes));
-  //   });
-  // }, []);
-
-  // const getCurrentData = domain => {
-  //   chrome.storage.sync.get(null, d => {
-  //     setCurrentData({ domain, data: d });
-  //   });
-  // };
-
   return (
     <div className={classes.root}>
       <Drawer />

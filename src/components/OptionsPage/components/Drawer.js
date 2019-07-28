@@ -39,10 +39,7 @@ export default _ => {
   const c = useStyles();
   const ref = useRef(null);
   const [txt, setFilter] = useState('');
-  const [currentData, setCurrentData] = useState({});
   const [{ data, domain }, dispatch] = useContext(Context);
-  // console.log(11, useContext(Context));
-  // console.log('抽屉:', data);
 
   const scroll = e => {
     e.target.scrollTop > 30 && ref.current.classList.add(c.shadow);

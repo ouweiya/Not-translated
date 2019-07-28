@@ -39,6 +39,12 @@
 
 ![mer.png](img/mer.png)
 
+此扩展内置了[Fira Code](https://github.com/tonsky/FiraCode) 字体, 提供三种改变体.
+
+* FiraCode-Regular
+* FiraCode-Medium
+* FiraCode-Retina
+
 ![css.png](img/css.png)
 
 ## 安装
@@ -72,7 +78,7 @@
 这个扩展追求简洁,设计成了无菜单项, 要 启动选择/关闭选择, 直接点击图标.
 也有快捷键.
 
-`Ctrl+q` 切换 开启 / 关闭
+`Ctrl + q` 切换 开启 / 关闭, Mac `Command + q`
 
 `Esc` 关闭 (当前文档失焦时, 会不起作用)
 

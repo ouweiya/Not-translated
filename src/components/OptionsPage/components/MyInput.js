@@ -31,7 +31,6 @@ const InputMe = ({ row, field }) => {
       return { ...obj, [v]: fn(v) };
     }, {});
     obj2 = { ...data[domain], ...obj2 };
-    console.log('obj2', obj2);
 
     let obj = { ...data, [domain]: obj2 };
     dispatch({ type: 'data', data: obj });

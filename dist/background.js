@@ -1,5 +1,4 @@
 chrome.storage.sync.get('globalCss', data => {
-  console.log('globalCss:', data.globalCss);
   if (!data.globalCss) {
     const code = `font-family: FiraCode-Regular !important;\nfont-size: 14px !important;`;
     chrome.storage.sync.set({ globalCss: code });
@@ -23,7 +22,6 @@ chrome.tabs.onUpdated.addListener((tabId, status, tab) => {
 chrome.storage.onChanged.addListener(e => {
   chrome.storage.sync.get(null, data => {
     globalData = data;
-    console.log('onChanged:', globalData);
   });
 });
 

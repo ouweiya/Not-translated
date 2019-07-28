@@ -62,6 +62,7 @@
     document.addEventListener('mousewheel', mousewheel, { passive: false });
     window.addEventListener('contextmenu', contextmenu);
     document.addEventListener('mouseup', mouseup);
+    selec(e.target);
 
     const filter = el => {
       const code = /^(pre|code|table|tbody|td|th)$/i.test(el.tagName);
@@ -86,7 +87,6 @@
       };
 
       const index = lookupIndex(e.target);
-
       nextEl = (i => {
         return n => {
           i += n;
@@ -146,7 +146,7 @@
         setStyle(data);
       });
     } else {
-      // console.log(`%c无效元素`, 'color:red');
+      console.log(`%c无效元素`, 'color:red');
     }
     // console.log('classes:', classes);
     document.removeEventListener('mousewheel', mousewheel);

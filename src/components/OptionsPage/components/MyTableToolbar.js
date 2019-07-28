@@ -45,16 +45,16 @@ const EnhancedTableToolbar = props => {
     let obj2 = ['sty', 'def', 'mid'].reduce((obj, v) => {
       return { ...obj, [v]: rows2.reduce((acc, v2) => (v2[v] ? acc.concat(v2[v]) : acc), []) };
     }, {});
-
+    obj2 = { ...data[domain], ...obj2 };
     let obj = { ...data, [domain]: obj2 };
     dispatch({ type: 'data', data: obj });
 
     console.log('xxxx', rows2);
-    if (!rows2.length) {
-      const obj = { ...data };
-      delete obj[domain];
-      // dispatch({ type: 'data', data: obj });
-    }
+    // if (!rows2.length) {
+    //   const obj = { ...data };
+    //   delete obj[domain];
+    //   // dispatch({ type: 'data', data: obj });
+    // }
   };
 
   const add = _ => {

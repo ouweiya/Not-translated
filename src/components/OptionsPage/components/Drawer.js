@@ -52,6 +52,7 @@ export default _ => {
   const SearchBox = e('div', { className: c.box, ref }, e(Search, { setFilter }), e(Divider));
 
   const renderlist = Object.keys(data)
+    .filter(v => v !== 'globalCss')
     .filter(v => v.includes(txt))
     .map((v, i) =>
       e(

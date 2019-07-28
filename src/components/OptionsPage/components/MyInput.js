@@ -7,7 +7,7 @@ import { Context } from '../Store';
 const useStyles = makeStyles(theme => ({
   root: {
     '& div::before': {
-      borderBottomColor: '#00000000',
+      borderBottomColor: '#00000000'
     }
   }
 }));
@@ -31,7 +31,7 @@ const InputMe = ({ row, field }) => {
     let obj2 = ['sty', 'def', 'mid'].reduce((obj, v) => {
       return { ...obj, [v]: fn(v) };
     }, {});
-
+    obj2 = { ...data[domain], ...obj2 };
     console.log('obj2', obj2);
 
     let obj = { ...data, [domain]: obj2 };
@@ -39,20 +39,19 @@ const InputMe = ({ row, field }) => {
   };
 
   const edit = e => {
+    if (!domain) {
+      return;
+    }
     const val = e.target.value;
-
-    setTxt('');
     if (!isNaN(parseFloat(val))) {
-      // console.log('选择器不能是数字');
       setError(true);
       setTxt('选择器不能是数字');
     } else if (rows.map(v => v[field]).includes(val) && val) {
-      // console.log('重复选择器');
       setError(true);
       setTxt('重复选择器');
     } else {
-      // setError(false);
-      // setTxt('');
+      setError(false);
+      setTxt('');
     }
 
     dispatch({ type: 'error', error: val });

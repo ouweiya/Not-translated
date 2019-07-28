@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
 import './Css.css';
+import { Context } from '../Store';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -30,24 +31,42 @@ const debounce = (() => {
   };
 })();
 
-export default function OutlinedTextFields({ domain, dataAll }) {
+export default function OutlinedTextFields() {
   const classes = useStyles();
-  const code = `font-family: 'Fira Code Regular', Consolas !important;\nfont-size: 14px !important;`;
-  const [globalCss, setGlobalCss] = useState(code);
-  const [localCss, setLocalCss] = useState(code);
-
+  const [{ data, domain }, dispatch] = useContext(Context);
+  // const [Css, setCss] = useState('');
+  // window.data = data;
   useEffect(() => {
-    // console.log(localCss);
-    // debounce(domain, { ...dataAll[domain], css: localCss });
-    // chrome.storage.sync.set({ [domain]: { ...dataAll[domain], css: localCss } });
-    // chrome.storage.sync.set({ [domain]: { ...dataAll[domain], css: localCss } });
-    // console.log('ccc', domain, dataAll);
-    // console.log({ ...dataAll[domain], css: localCss });
-  }, [localCss]);
+    // console.log(data);
+    // if (data[domain]) {
+    //   setCss(data[domain].css);
+    //   console.log('CCC:', Css);
+    // }
+  }, [data, domain]);
 
-  useEffect(() => {
-    console.log(globalCss);
-  }, [globalCss]);
+  const setLocalCss = e => {
+    if (!domain) {
+      return;
+    }
+    const css = e.target.value;
+    const newCss = { ...data[domain], css };
+    let newdata = { ...data, [domain]: newCss };
+    dispatch({ type: 'data', data: newdata });
+  };
+
+  const setGlobalCss = e => {
+    const css = e.target.value;
+    let a = { ...data, globalCss: css };
+    console.log(a);
+    dispatch({ type: 'data', data: a });
+  };
+
+  let Css = '';
+  if (data[domain]) {
+    Css = data[domain].css || '';
+    // console.log('CCC:', Css);
+  }
+  // console.log(data.globalCss, 3323);
 
   return (
     <Container maxWidth='md'>
@@ -59,22 +78,29 @@ export default function OutlinedTextFields({ domain, dataAll }) {
         margin='normal'
         variant='outlined'
         fullWidth
-        value={localCss}
-        onChange={e => setLocalCss(e.target.value)}
+        onChange={setLocalCss}
         id='text'
+        value={Css}
+        placeholder='默认运用全局'
+        InputLabelProps={{
+          shrink: true
+        }}
       />
 
       <TextField
-        label='Global'
+        label='全局'
         multiline
         rows='8'
         className={`${classes.textField} ${classes.last}`}
         margin='normal'
         variant='outlined'
         fullWidth
-        value={globalCss}
-        onChange={e => setGlobalCss(e.target.value)}
+        value={data.globalCss}
+        onChange={setGlobalCss}
         id='text'
+        InputLabelProps={{
+          shrink: true
+        }}
       />
     </Container>
   );

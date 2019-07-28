@@ -3,8 +3,9 @@ import Popup from './Popup';
 import Options from './Options';
 
 const App = () => {
-  const El = window.location.hash === '#popup' ? e(Popup) : Options;
-  return e(f, null, El);
+  // const El = window.location.hash === '#popup' ? e(Popup) : Options;
+  // const El = window.location.hash === '#popup' ? e(Popup) : Options;
+  return e(f, null, Options);
 };
 
 export default App;

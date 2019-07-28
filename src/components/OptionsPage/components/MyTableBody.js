@@ -12,9 +12,12 @@ const MyTableBody = _ => {
   const createData = (sty, def, mid, id) => ({ sty, def, mid, id });
 
   useEffect(() => {
+    console.log({ data, domain });
+    console.log('data[domain]=> ', data[domain]);
+
     if (data[domain]) {
       let { sty, def, mid } = data[domain];
-      const i = Object.values(data[domain]).reduce((acc, v) => (v.length > acc ? (acc = v.length) : acc), 0);
+      const i = [ sty, def, mid].reduce((acc, v) => (v.length > acc ? v.length : acc), 0);
       const rows = [...Array(i)].map((v, i) => createData(sty[i] || '', def[i] || '', mid[i] || '', i));
       console.log(rows, 111);
       dispatch({ type: 'rows', rows });
@@ -23,6 +26,7 @@ const MyTableBody = _ => {
         const obj = { ...data };
         delete obj[domain];
         dispatch({ type: 'data', data: obj });
+        chrome.storage.sync.remove(domain);
       }
     }
     return () => {

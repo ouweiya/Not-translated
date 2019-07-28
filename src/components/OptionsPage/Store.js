@@ -21,6 +21,16 @@ const reducer = (state, action) => {
   }
 };
 
+const debounce = (_ => {
+  let time = null;
+  return callback => {
+    clearTimeout(time);
+    time = setTimeout(() => {
+      callback();
+    }, 100);
+  };
+})();
+
 const Store = props => {
   const [state, dispatch] = useReducer(reducer, {
     data: {},
@@ -34,10 +44,33 @@ const Store = props => {
   useEffect(() => {
     chrome.storage.sync.get(null, data => {
       dispatch({ type: 'data', data });
-      dispatch({ type: 'domain', domain: Object.keys(data)[0] });
+      let first = Object.keys(data)[0];
+      dispatch({ type: 'domain', domain: first === 'globalCss' ? '' : first });
       console.log('获取数据', data);
     });
+
+    chrome.runtime.onMessage.addListener((request, sender) => {
+      chrome.storage.sync.get(null, data => {
+        if (request === 'sel') {
+          dispatch({ type: 'data', data });
+        } else {
+          const domain = new URL(sender.url).hostname;
+          console.log(request, domain);
+
+          if (Object.keys(data).includes(domain)) {
+            dispatch({ type: 'domain', domain });
+          }
+        }
+      });
+    });
   }, []);
+
+  useEffect(() => {
+    debounce(() => {
+      console.log('全局商店: ', state.data);
+      chrome.storage.sync.set(state.data);
+    });
+  }, [state]);
 
   const M = useMemo(_ => e(Context.Provider, { value: [state, dispatch] }, props.children), [state]);
   return M;

@@ -51,7 +51,7 @@ export default function EnhancedTable() {
     Paper,
     { className: c.paper },
     e(MyTableToolbar),
-    toggle
+    !toggle
       ? e(
           'div',
           { className: c.tableWrapper },

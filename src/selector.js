@@ -141,6 +141,8 @@
           document.removeEventListener('mouseup', mouseup);
         }
         chrome.storage.sync.set({ [domain]: data });
+        chrome.runtime.sendMessage('sel');
+
         console.log(data);
         setStyle(data);
       });
@@ -184,4 +186,11 @@
     window.addEventListener('visibilitychange', stop);
   };
   init();
+
+
+  // console.log(response);
+
+  // chrome.runtime.sendMessage('选取了', response => {
+  //   // console.log(response);
+  // });
 }

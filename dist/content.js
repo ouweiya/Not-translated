@@ -1,5 +1,3 @@
-// const defcss = `font-family:'Fira Code Regular', Consolas !important;font-size: 14px !important;`;
-
 const All = (arr, mid) => {
   if (arr.length) {
     const arrEl = document.querySelectorAll(arr);
@@ -27,6 +25,17 @@ let once = ([data, globalCss]) => {
   document.head.insertAdjacentElement('beforeend', sty_);
   sty_.sheet.insertRule(`.sty_, .sty_ * { ${css || globalCss} }`, sty_.sheet.cssRules.length);
   sty_.sheet.cssRules[0].selectorText = styArr;
+
+  const setFont = font => {
+    const url = chrome.extension.getURL(`./assets/${font}.ttf`);
+    const face = `@font-face { font-family: ${font}; src: url(${url}); }`;
+    sty_.sheet.insertRule(face, sty_.sheet.cssRules.length);
+  };
+
+  ['FiraCode-Medium', 'FiraCode-Regular', 'FiraCode-Retina'].forEach(v => setFont(v));
+
+  console.dir(sty_.sheet);
+
   console.log('注入样式', data);
   console.log('globalCss:', globalCss);
   console.log('css:', css);
@@ -35,6 +44,5 @@ let once = ([data, globalCss]) => {
 };
 
 chrome.runtime.onMessage.addListener(_ => once(_));
-
 
 chrome.runtime.sendMessage('当前页面');

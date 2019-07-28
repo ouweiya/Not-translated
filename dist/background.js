@@ -1,5 +1,11 @@
-const code = `font-family: 'Fira Code Regular', Consolas !important;\nfont-size: 14px !important;`;
-chrome.storage.sync.set({ globalCss: code });
+chrome.storage.sync.get('globalCss', data => {
+  console.log('globalCss:', data.globalCss);
+  if (!data.globalCss) {
+    const code = `font-family: FiraCode-Regular !important;\nfont-size: 14px !important;`;
+    chrome.storage.sync.set({ globalCss: code });
+    console.log('没有css')
+  }
+});
 
 let globalData = {};
 

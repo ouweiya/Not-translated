@@ -34,5 +34,6 @@
         "mac": "Command+Q"
       }
     }
-  }
+  },
+  "web_accessible_resources": ["assets/*"]
 }

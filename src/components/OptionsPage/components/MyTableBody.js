@@ -15,14 +15,25 @@ const MyTableBody = _ => {
     console.log({ data, domain });
     console.log('data[domain]=> ', data[domain]);
 
+    let k = Object.keys(data).filter(v => v !== 'globalCss');
+    console.log('是否为空', k);
+    if (k.length === 1) {
+      dispatch({ type: 'domain', domain: `${k}` });
+    }
     if (data[domain]) {
       let { sty, def, mid } = data[domain];
-      const i = [ sty, def, mid].reduce((acc, v) => (v.length > acc ? v.length : acc), 0);
+      const i = [sty, def, mid].reduce((acc, v) => (v.length > acc ? v.length : acc), 0);
       const rows = [...Array(i)].map((v, i) => createData(sty[i] || '', def[i] || '', mid[i] || '', i));
       console.log(rows, 111);
       dispatch({ type: 'rows', rows });
 
       if (!rows.length) {
+        let k = Object.keys(data).filter(v => v !== 'globalCss');
+        let i = k.indexOf(domain) + 1;
+        let newdom = k[i];
+        console.log('下一个域名:', newdom);
+        dispatch({ type: 'domain', domain: newdom });
+
         const obj = { ...data };
         delete obj[domain];
         dispatch({ type: 'data', data: obj });
@@ -52,10 +63,10 @@ const MyTableBody = _ => {
               <TableCell scope='row'>
                 <InputMe row={row} field='sty' />
               </TableCell>
-              <TableCell align='center'>
+              <TableCell align='left'>
                 <InputMe row={row} field='def' />
               </TableCell>
-              <TableCell align='center'>
+              <TableCell align='left'>
                 <InputMe row={row} field='mid' />
               </TableCell>
             </TableRow>

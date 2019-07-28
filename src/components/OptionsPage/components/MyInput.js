@@ -5,7 +5,7 @@ import { Context } from '../Store';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    '& div::before': {
+    '& > div::before': {
       borderBottomColor: '#00000000'
     }
   }

@@ -37,8 +37,6 @@ const EnhancedTableToolbar = props => {
     obj2 = { ...data[domain], ...obj2 };
     let obj = { ...data, [domain]: obj2 };
     dispatch({ type: 'data', data: obj });
-
-    console.log('xxxx', rows2);
   };
 
   const add = _ => {

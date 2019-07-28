@@ -55,7 +55,7 @@ const Store = props => {
           dispatch({ type: 'data', data });
         } else if (request === 'current') {
           const domain = new URL(sender.url).hostname;
-          console.log('选项接受:, current', domain);
+
           if (Object.keys(data).includes(domain)) {
             dispatch({ type: 'domain', domain });
           }
@@ -66,7 +66,6 @@ const Store = props => {
 
   useEffect(() => {
     debounce(() => {
-      console.log('全局商店: ', state.data);
       chrome.storage.sync.set(state.data);
     });
   }, [state]);

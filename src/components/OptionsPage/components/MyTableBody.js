@@ -12,11 +12,8 @@ const MyTableBody = _ => {
   const createData = (sty, def, mid, id) => ({ sty, def, mid, id });
 
   useEffect(() => {
-    console.log({ data, domain });
-    console.log('data[domain]=> ', data[domain]);
-
     let k = Object.keys(data).filter(v => v !== 'globalCss');
-    console.log('是否为空', k);
+
     if (k.length === 1) {
       dispatch({ type: 'domain', domain: `${k}` });
     }
@@ -24,14 +21,14 @@ const MyTableBody = _ => {
       let { sty, def, mid } = data[domain];
       const i = [sty, def, mid].reduce((acc, v) => (v.length > acc ? v.length : acc), 0);
       const rows = [...Array(i)].map((v, i) => createData(sty[i] || '', def[i] || '', mid[i] || '', i));
-      console.log(rows, 111);
+
       dispatch({ type: 'rows', rows });
 
       if (!rows.length) {
         let k = Object.keys(data).filter(v => v !== 'globalCss');
         let i = k.indexOf(domain) + 1;
         let newdom = k[i];
-        console.log('下一个域名:', newdom);
+
         dispatch({ type: 'domain', domain: newdom });
 
         const obj = { ...data };

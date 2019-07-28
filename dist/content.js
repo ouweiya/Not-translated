@@ -12,7 +12,7 @@ const All = (arr, mid) => {
       midEl[i].classList.add('translate');
     }
   }
-  console.log('oooooooo');
+  // console.log('oooooooo');
 };
 
 let once = ([data, globalCss]) => {
@@ -34,12 +34,6 @@ let once = ([data, globalCss]) => {
 
   ['FiraCode-Medium', 'FiraCode-Regular', 'FiraCode-Retina'].forEach(v => setFont(v));
 
-  console.dir(sty_.sheet);
-
-  console.log('注入样式', data);
-  console.log('globalCss:', globalCss);
-  console.log('css:', css);
-
   once = () => All(arr, mid);
 };
 
@@ -50,3 +44,4 @@ chrome.runtime.onMessage.addListener(({ type, data }) => {
 });
 
 chrome.runtime.sendMessage('current');
+chrome.runtime.sendMessage('stop');

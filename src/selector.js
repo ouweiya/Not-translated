@@ -143,13 +143,12 @@
         chrome.storage.sync.set({ [domain]: data });
         chrome.runtime.sendMessage('sel');
 
-        console.log(data);
         setStyle(data);
       });
     } else {
-      console.log(`%c无效元素`, 'color:red');
+      // console.log(`%c无效元素`, 'color:red');
     }
-    console.log('classes:', classes);
+    // console.log('classes:', classes);
     document.removeEventListener('mousewheel', mousewheel);
   };
 
@@ -174,7 +173,6 @@
     document.removeEventListener('click', click);
     window.removeEventListener('contextmenu', contextmenu);
     chrome.runtime.onMessage.removeListener(stopHandler);
-    console.log('清除');
   };
 
   const stop = () => {

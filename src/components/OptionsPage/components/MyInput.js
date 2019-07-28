@@ -75,7 +75,6 @@ const InputMe = ({ row, field }) => {
 
 const MyInput = props => {
   return useMemo(() => {
-    console.log('xxxxxxx');
     return <InputMe {...props} />;
   }, [props.row]);
 };

@@ -40,7 +40,6 @@ export default function OutlinedTextFields() {
   const setGlobalCss = e => {
     const css = e.target.value;
     let a = { ...data, globalCss: css };
-    console.log(a);
     dispatch({ type: 'data', data: a });
   };
 

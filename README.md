@@ -63,7 +63,7 @@
 
 下载压缩文件包, 然后解压, 在 Chrome 中加载.
 
-[Not translated.zip](https://github.com/ouweiya/Not-translated/releases/download/1.0/dist.zip)
+[Not translated.zip](https://github.com/ouweiya/Not-translated/releases/download/1.1/Not.translated.zip)
 
 或者将源代码中的`dist`文件, 加载到 Chrome 中也可以.
 

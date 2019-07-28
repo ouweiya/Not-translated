@@ -4,8 +4,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 // production  development
+console.log('环境', process.env.NODE_ENV);
 module.exports = {
-  mode: 'development',
+  mode: process.env.NODE_ENV,
   devtool: 'inline-source-map',
   entry: './src/index.js',
   output: {
@@ -33,12 +34,12 @@ module.exports = {
 
         use: [
           {
-            loader: 'html-loader'
-            // options: {
-            // minimize: true,
-            // removeComments: true,
-            // collapseWhitespace: true
-            // }
+            loader: 'html-loader',
+            options: {
+              minimize: process.env.NODE_ENV === 'production',
+              removeComments: process.env.NODE_ENV === 'production',
+              collapseWhitespace: process.env.NODE_ENV === 'production'
+            }
           }
         ]
       },
@@ -68,8 +69,7 @@ module.exports = {
         { from: __dirname + '/src/assets', to: __dirname + '/dist/assets' },
         { from: __dirname + '/src/background.js', to: __dirname + '/dist' },
         { from: __dirname + '/src/selector.js', to: __dirname + '/dist' },
-        { from: __dirname + '/src/content.js', to: __dirname + '/dist' },
-        { from: __dirname + '/src/content.css', to: __dirname + '/dist' }
+        { from: __dirname + '/src/content.js', to: __dirname + '/dist' }
       ],
       { copyUnmodified: true }
     ),

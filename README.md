@@ -51,7 +51,7 @@
 
 ![mer.png](img/mer.png)
 
-此扩展内置了[Fira Code](https://github.com/tonsky/FiraCode) 字体, 提供三种改变体.
+此扩展内置了[Fira Code](https://github.com/tonsky/FiraCode) 字体, 提供三种变体.
 
 - FiraCode-Regular
 - FiraCode-Medium

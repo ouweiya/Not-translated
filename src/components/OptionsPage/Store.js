@@ -53,10 +53,9 @@ const Store = props => {
       chrome.storage.sync.get(null, data => {
         if (request === 'sel') {
           dispatch({ type: 'data', data });
-        } else {
+        } else if (request === 'current') {
           const domain = new URL(sender.url).hostname;
-          console.log(request, domain);
-
+          console.log('选项接受:, current', domain);
           if (Object.keys(data).includes(domain)) {
             dispatch({ type: 'domain', domain });
           }

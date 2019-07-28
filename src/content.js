@@ -43,6 +43,10 @@ let once = ([data, globalCss]) => {
   once = () => All(arr, mid);
 };
 
-chrome.runtime.onMessage.addListener(_ => once(_));
+chrome.runtime.onMessage.addListener(({ type, data }) => {
+  if (type === 'translation') {
+    once(data);
+  }
+});
 
-chrome.runtime.sendMessage('当前页面');
+chrome.runtime.sendMessage('current');

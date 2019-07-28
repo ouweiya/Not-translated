@@ -153,11 +153,17 @@
     document.removeEventListener('mousewheel', mousewheel);
   };
 
-  const keydown = e => e.keyCode === 27 && stop();
+  const keydown = e => {
+    if (e.keyCode === 27) {
+      events();
+      chrome.runtime.sendMessage('stop');
+    }
+  };
+
   const contextmenu = e => e.preventDefault();
   const click = e => (e.stopPropagation(), e.preventDefault());
 
-  const stop = () => {
+  const events = () => {
     style.sheet && style.remove();
     document.removeEventListener('mouseover', mouseover);
     document.removeEventListener('mouseout', mouseout);
@@ -167,7 +173,12 @@
     document.removeEventListener('keydown', keydown);
     document.removeEventListener('click', click);
     window.removeEventListener('contextmenu', contextmenu);
-    console.log('stop');
+    chrome.runtime.onMessage.removeListener(stopHandler);
+    console.log('清除');
+  };
+
+  const stop = () => {
+    events();
   };
 
   const init = _ => {
@@ -187,10 +198,11 @@
   };
   init();
 
+  const stopHandler = ({ type }) => {
+    if (type === 'stop') {
+      stop();
+    }
+  };
 
-  // console.log(response);
-
-  // chrome.runtime.sendMessage('选取了', response => {
-  //   // console.log(response);
-  // });
+  chrome.runtime.onMessage.addListener(stopHandler);
 }

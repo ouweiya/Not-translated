@@ -2,7 +2,7 @@
   "name": "Not translated",
   "version": "1.0",
   "description": "修复翻译排版格式",
-  "permissions": ["tabs", "activeTab", "storage", "<all_urls>", "webNavigation"],
+  "permissions": ["tabs", "activeTab", "storage", "<all_urls>"],
   "options_page": "index.html",
   "background": {
     "scripts": ["background.js"],
@@ -11,7 +11,8 @@
   "browser_action": {
     "default_title": "选取元素",
     "default_icon": {
-      "128": "assets/icon.png"
+      "19": "assets/19.png",
+      "38": "assets/32.png"
     }
   },
   "content_scripts": [
@@ -23,7 +24,10 @@
     }
   ],
   "icons": {
-    "128": "assets/icon.png"
+    "128": "assets/128.png",
+    "19": "assets/19.png",
+    "32": "assets/32.png",
+    "48": "assets/48.png"
   },
   "manifest_version": 2,
   "commands": {

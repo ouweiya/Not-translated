@@ -1,6 +1,5 @@
 import React, { useEffect, Fragment as f, createElement as e, useContext, useMemo, useCallback, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Input from '@material-ui/core/Input';
 import TextField from '@material-ui/core/TextField';
 import { Context } from '../Store';
 
@@ -82,48 +81,3 @@ const MyInput = props => {
 };
 
 export default MyInput;
-
-// const compare = (prev, next) => {
-//   console.log(prev, '===', next);
-//   if (prev.value === next.value) {
-//     return true;
-//   }
-//   return false;
-// };
-
-// return (
-//   <MyInput
-//     value={row[field] === undefined ? '' : row[field]}
-//     onChange={edit}
-//     className={c.root}
-//     onClick={e => e.stopPropagation()}
-//   />
-// );
-// let MyInput = React.memo(props => {
-//   console.log('MyInput', props);
-//   return <Input {...props} />;
-// }, compare);
-
-// const MyInput = React.memo(props => {
-//   console.log('MyInput', props);
-//   return <Input {...props} />;
-// }, compare);
-
-// const MyInput = React.memo(props => {
-//   return <InputMe {...props} />;
-// }, compare);
-
-// export default MyInput;
-
-// (prevProps, nextProps) => {
-//   if (prevProps.row === nextProps.row) return true;
-//   return false;
-// };
-
-// onBlur={e => toggle || (toggle = true)}
-// const classes = useStyles2();
-// // let toggle = true;
-// const click = e => {
-//   e.stopPropagation();
-//   // (toggle = !toggle) && e.target.blur();
-// };

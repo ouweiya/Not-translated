@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
-import './Css.css';
 import { Context } from '../Store';
 
 const useStyles = makeStyles(theme => ({
@@ -13,36 +12,20 @@ const useStyles = makeStyles(theme => ({
     margin: 'auto'
   },
   textField: {
-    margin: theme.spacing(4, 1)
+    margin: theme.spacing(4, 1),
+    '& textarea': {
+      fontFamily: 'Fira Code Regular',
+      fontSize: '14px'
+    }
   },
   last: {
     marginBottom: theme.spacing(8)
   }
 }));
 
-const debounce = (() => {
-  let time = null;
-  return (domain, data) => {
-    clearTimeout(time);
-    time = setTimeout(() => {
-      // console.log(domain, data);
-      // chrome.storage.sync.set({ '127.0.0.1': { css: 'dsdsdfasfdfr342343242342343' } });
-    }, 500);
-  };
-})();
-
 export default function OutlinedTextFields() {
-  const classes = useStyles();
+  const c = useStyles();
   const [{ data, domain }, dispatch] = useContext(Context);
-  // const [Css, setCss] = useState('');
-  // window.data = data;
-  useEffect(() => {
-    // console.log(data);
-    // if (data[domain]) {
-    //   setCss(data[domain].css);
-    //   console.log('CCC:', Css);
-    // }
-  }, [data, domain]);
 
   const setLocalCss = e => {
     if (!domain) {
@@ -64,9 +47,7 @@ export default function OutlinedTextFields() {
   let Css = '';
   if (data[domain]) {
     Css = data[domain].css || '';
-    // console.log('CCC:', Css);
   }
-  // console.log(data.globalCss, 3323);
 
   return (
     <Container maxWidth='md'>
@@ -74,7 +55,7 @@ export default function OutlinedTextFields() {
         label={domain || '未选择'}
         multiline
         rows='8'
-        className={classes.textField}
+        className={c.textField}
         margin='normal'
         variant='outlined'
         fullWidth
@@ -91,7 +72,7 @@ export default function OutlinedTextFields() {
         label='全局'
         multiline
         rows='8'
-        className={`${classes.textField} ${classes.last}`}
+        className={`${c.textField} ${c.last}`}
         margin='normal'
         variant='outlined'
         fullWidth

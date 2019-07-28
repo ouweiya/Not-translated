@@ -14,4 +14,4 @@ const theme = createMuiTheme({
   }
 });
 
-export default e(ThemeProvider, { theme }, e(CssBaseline), e(Store, null, e(Options)));
+export default () => e(ThemeProvider, { theme }, e(CssBaseline), e(Store, null, e(Options)));

@@ -146,7 +146,7 @@
         setStyle(data);
       });
     } else {
-      console.log(`%c无效元素`, 'color:red');
+      // console.log(`%c无效元素`, 'color:red');
     }
     // console.log('classes:', classes);
     document.removeEventListener('mousewheel', mousewheel);

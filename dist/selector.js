@@ -62,7 +62,6 @@
     document.addEventListener('mousewheel', mousewheel, { passive: false });
     window.addEventListener('contextmenu', contextmenu);
     document.addEventListener('mouseup', mouseup);
-    selec(e.target);
 
     const filter = el => {
       const code = /^(pre|code|table|tbody|td|th)$/i.test(el.tagName);

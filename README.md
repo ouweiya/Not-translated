@@ -65,7 +65,7 @@
 
 [Not translated.zip](https://github.com/ouweiya/Not-translated/releases/download/1.1/Not.translated.zip)
 
-或者将源代码中的`dist`文件, 加载到 Chrome 中也可以.
+或者将源代码 [github.com/ouweiya/Not-translated](https://github.com/ouweiya/Not-translated) 中的`dist`文件, 加载到 Chrome 中也可以.
 
 ![g.png](img/g.png)
 

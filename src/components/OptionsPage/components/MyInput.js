@@ -68,6 +68,7 @@ const InputMe = ({ row, field }) => {
       onBlur={Submit}
       label={Txt}
       error={!!(error === row[field] && error && Error)}
+      fullWidth
     />
   );
 };

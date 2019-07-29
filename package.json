@@ -19,6 +19,7 @@
     "react-dom": "^16.8.6",
     "react-redux": "^7.1.0",
     "redux": "^4.0.4",
+    "release-it": "^12.3.4",
     "style-loader": "^0.23.1",
     "typeface-roboto": "^0.0.75",
     "webpack": "^4.35.3",
@@ -28,7 +29,8 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
     "watch": "cross-env NODE_ENV=development webpack --watch",
-    "start": "webpack-dev-server --open"
+    "start": "webpack-dev-server --open",
+    "release": "release-it"
   },
   "devDependencies": {
     "babel-eslint": "9.x",

@@ -12,7 +12,7 @@ const All = (arr, mid) => {
       midEl[i].classList.add('translate');
     }
   }
-  // console.log('oooooooo');
+  // console.log('notranslate');
 };
 
 let once = ([data, globalCss]) => {

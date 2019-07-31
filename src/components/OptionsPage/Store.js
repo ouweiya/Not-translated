@@ -41,26 +41,41 @@ const Store = props => {
     toggle: false
   });
 
+  let localData = {};
   useEffect(() => {
-    chrome.storage.sync.get(null, data => {
-      dispatch({ type: 'data', data });
-      let first = Object.keys(data)[0];
-      dispatch({ type: 'domain', domain: first === 'globalCss' ? '' : first });
-      console.log('获取数据', data);
+    chrome.runtime.onMessage.addListener((request, sender) => {
+      if (request.type === 'currentDomain') {
+        chrome.storage.sync.get(null, data => {
+          dispatch({ type: 'data', data });
+          console.log('获取数据', data);
+          localData = data;
+          let first = Object.keys(data).includes(request.currentDomain)
+            ? request.currentDomain
+            : Object.keys(data)[0];
+
+          dispatch({ type: 'domain', domain: first === 'globalCss' ? '' : first });
+        });
+      }
     });
 
     chrome.runtime.onMessage.addListener((request, sender) => {
-      chrome.storage.sync.get(null, data => {
-        if (request === 'sel') {
+      if (request === 'sel') {
+        chrome.storage.sync.get(null, data => {
           dispatch({ type: 'data', data });
-        } else if (request === 'current') {
+          localData = data;
           const domain = new URL(sender.url).hostname;
-
           if (Object.keys(data).includes(domain)) {
             dispatch({ type: 'domain', domain });
           }
+        });
+      }
+
+      if (request === 'current') {
+        const domain = new URL(sender.url).hostname;
+        if (Object.keys(localData).includes(domain)) {
+          dispatch({ type: 'domain', domain });
         }
-      });
+      }
     });
   }, []);
 
@@ -68,6 +83,7 @@ const Store = props => {
     debounce(() => {
       chrome.storage.sync.set(state.data);
     });
+    localData = state.data;
   }, [state]);
 
   const M = useMemo(_ => e(Context.Provider, { value: [state, dispatch] }, props.children), [state]);

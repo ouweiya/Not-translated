@@ -141,7 +141,7 @@
         }
         chrome.storage.sync.set({ [domain]: data });
         chrome.runtime.sendMessage('sel');
-        chrome.runtime.sendMessage('current');
+        // chrome.runtime.sendMessage('current');
         setStyle(data);
       });
     } else {

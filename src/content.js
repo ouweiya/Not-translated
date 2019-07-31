@@ -44,4 +44,5 @@ chrome.runtime.onMessage.addListener(({ type, data }) => {
 });
 
 chrome.runtime.sendMessage('current');
+// chrome.runtime.sendMessage('currentDomain');
 chrome.runtime.sendMessage('stop');

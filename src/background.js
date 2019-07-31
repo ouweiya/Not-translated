@@ -6,6 +6,7 @@ chrome.storage.sync.get('globalCss', data => {
 });
 
 let globalData = {};
+let currentDomain = '';
 
 chrome.storage.sync.get(null, data => {
   globalData = data;
@@ -13,9 +14,17 @@ chrome.storage.sync.get(null, data => {
 });
 
 chrome.tabs.onUpdated.addListener((tabId, status, tab) => {
-  const domain = new URL(tab.url).hostname;
+  const addr = new URL(tab.url);
+  const domain = addr.hostname;
+  const protocol = addr.protocol;
+
   if (globalData[domain]) {
     chrome.tabs.sendMessage(tabId, { type: 'translation', data: [globalData[domain], globalData.globalCss] });
+  }
+
+
+  if (protocol === 'chrome-extension:') {
+    chrome.runtime.sendMessage({ type: 'currentDomain', currentDomain });
   }
 });
 
@@ -49,5 +58,10 @@ chrome.runtime.onMessage.addListener((request, sender) => {
   if (request === 'stop') {
     chrome.browserAction.setIcon({ path: 'assets/19.png', tabId: sender.tab.id });
     toggle = true;
+  }
+
+  if (request === 'current') {
+    const domain = new URL(sender.tab.url).hostname;
+    currentDomain = domain;
   }
 });
